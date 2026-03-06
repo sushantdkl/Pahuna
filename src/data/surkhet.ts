@@ -8,7 +8,7 @@ export const surkhetCity = {
   tagline: "Gateway to Karnali",
   description:
     "Surkhet, the provincial capital of Karnali Province, is a vibrant valley town surrounded by lush hills, ancient temples, and untouched natural beauty. Located in mid-western Nepal, Birendranagar serves as the administrative hub and a key transit point for travelers heading deeper into the Karnali region. With its pleasant climate, growing hospitality scene, and rich cultural heritage, Surkhet is emerging as a must-visit destination for those seeking authentic Nepali experiences beyond the usual tourist trails.",
-  coverImage: "/images/surkhet-valley.jpg",
+  coverImage: "https://images.unsplash.com/photo-1605640840605-14ac1855827b?w=1200&q=80",
   latitude: 28.6,
   longitude: 81.6167,
 };
@@ -41,8 +41,8 @@ export const demoHotels = [
       "Laundry",
     ],
     images: [
-      "/images/hotels/karnali-star-1.jpg",
-      "/images/hotels/karnali-star-2.jpg",
+      "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80",
+      "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=800&q=80",
     ],
   },
   {
@@ -70,8 +70,8 @@ export const demoHotels = [
       "Cultural Activities",
     ],
     images: [
-      "/images/hotels/homestay-1.jpg",
-      "/images/hotels/homestay-2.jpg",
+      "https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=800&q=80",
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80",
     ],
   },
   {
@@ -99,8 +99,8 @@ export const demoHotels = [
       "TV",
     ],
     images: [
-      "/images/hotels/green-valley-1.jpg",
-      "/images/hotels/green-valley-2.jpg",
+      "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800&q=80",
+      "https://images.unsplash.com/photo-1618773928121-c32f3bcb5f6e?w=800&q=80",
     ],
   },
   {
@@ -133,8 +133,8 @@ export const demoHotels = [
       "Conference Hall",
     ],
     images: [
-      "/images/hotels/karnali-resort-1.jpg",
-      "/images/hotels/karnali-resort-2.jpg",
+      "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&q=80",
+      "https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=800&q=80",
     ],
   },
   {
@@ -155,8 +155,8 @@ export const demoHotels = [
     isFeatured: false,
     amenities: ["WiFi", "Hot Water", "Café", "Parking"],
     images: [
-      "/images/hotels/lodge-1.jpg",
-      "/images/hotels/lodge-2.jpg",
+      "https://images.unsplash.com/photo-1587381420270-cdd3a8386c5d?w=800&q=80",
+      "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?w=800&q=80",
     ],
   },
   {
@@ -187,8 +187,8 @@ export const demoHotels = [
       "Generator Backup",
     ],
     images: [
-      "/images/hotels/himalayan-view-1.jpg",
-      "/images/hotels/himalayan-view-2.jpg",
+      "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=800&q=80",
+      "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800&q=80",
     ],
   },
 ];
@@ -201,7 +201,7 @@ export const demoDestinations = [
       "A serene lake surrounded by hills, perfect for morning walks and picnics.",
     description:
       "Bulbule Tal is a picturesque lake located on the outskirts of Birendranagar. Surrounded by lush green hills, it is a popular spot for locals and visitors alike. The lake area features walking trails, benches, and a peaceful atmosphere ideal for photography and relaxation. Boating facilities are available during certain seasons.",
-    coverImage: "/images/destinations/bulbule-tal.jpg",
+    coverImage: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800&q=80",
     bestSeason: "October – March",
     entryFee: "Free",
     latitude: 28.597,
@@ -215,7 +215,7 @@ export const demoDestinations = [
       "An ancient Hindu temple dedicated to the local goddess, rich in cultural significance.",
     description:
       "Deuti Bajai Temple is one of the most revered religious sites in Surkhet. Perched on a hilltop, the temple offers panoramic views of the valley and is especially vibrant during the Dashain and Tihar festivals. The trek to the temple is a short but rewarding experience through forested paths.",
-    coverImage: "/images/destinations/deuti-bajai.jpg",
+    coverImage: "https://images.unsplash.com/photo-1609766857041-ed402ea8069a?w=800&q=80",
     bestSeason: "Year-round",
     entryFee: "Free",
     latitude: 28.607,
@@ -229,7 +229,7 @@ export const demoDestinations = [
       "Ancient Buddhist monastery ruins dating back to the Licchavi period.",
     description:
       "Kakre Bihar is an archaeological site of immense historical importance, featuring ruins of a Buddhist monastery believed to date from the Licchavi era (4th–9th century). Located about 6 km from Birendranagar, the site includes stone inscriptions, carved pillars, and remnants of stupas. It is a protected heritage site and a fascinating destination for history enthusiasts.",
-    coverImage: "/images/destinations/kakre-bihar.jpg",
+    coverImage: "https://images.unsplash.com/photo-1585136917261-17a0e2fdd48e?w=800&q=80",
     bestSeason: "October – April",
     entryFee: "NPR 50",
     latitude: 28.585,
@@ -243,7 +243,7 @@ export const demoDestinations = [
       "Natural limestone caves with historical significance and adventure appeal.",
     description:
       "Located near the Kakre Bihar ruins, these natural caves are believed to have been used by Buddhist monks for meditation centuries ago. The caves offer an adventurous experience with narrow passages and chambers that open into larger spaces. Guided tours are recommended.",
-    coverImage: "/images/destinations/kankre-cave.jpg",
+    coverImage: "https://images.unsplash.com/photo-1504870712516-26d0b397b303?w=800&q=80",
     bestSeason: "November – March",
     entryFee: "NPR 30",
     latitude: 28.584,
@@ -257,7 +257,7 @@ export const demoDestinations = [
       "Panoramic viewpoint overlooking the entire Surkhet valley and surrounding hills.",
     description:
       "This popular viewpoint on the northern rim of the Surkhet valley offers breathtaking 360-degree views. Especially stunning at sunrise and sunset, it's a favorite spot for photographers and nature lovers. The short hike from the road makes it accessible for most visitors.",
-    coverImage: "/images/destinations/valley-viewpoint.jpg",
+    coverImage: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
     bestSeason: "October – March",
     entryFee: "Free",
     latitude: 28.615,
@@ -279,7 +279,7 @@ export const demoExperiences = [
     difficulty: "Easy",
     priceRange: "NPR 500 - 1,000",
     bestSeason: "October – March",
-    coverImage: "/images/experiences/sunrise-hike.jpg",
+    coverImage: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80",
     isFeatured: true,
   },
   {
@@ -294,7 +294,7 @@ export const demoExperiences = [
     difficulty: "Easy",
     priceRange: "NPR 1,500 - 2,500",
     bestSeason: "Year-round",
-    coverImage: "/images/experiences/tharu-culture.jpg",
+    coverImage: "https://images.unsplash.com/photo-1533669955142-6a73332af4db?w=800&q=80",
     isFeatured: true,
   },
   {
@@ -309,7 +309,7 @@ export const demoExperiences = [
     difficulty: "Easy",
     priceRange: "NPR 800 - 1,200",
     bestSeason: "November – February",
-    coverImage: "/images/experiences/birdwatching.jpg",
+    coverImage: "https://images.unsplash.com/photo-1452570053594-1b985d6ea890?w=800&q=80",
     isFeatured: true,
   },
   {
@@ -324,7 +324,7 @@ export const demoExperiences = [
     difficulty: "Easy",
     priceRange: "NPR 1,000 - 2,000",
     bestSeason: "Year-round",
-    coverImage: "/images/experiences/food-trail.jpg",
+    coverImage: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=80",
     isFeatured: true,
   },
   {
@@ -339,7 +339,7 @@ export const demoExperiences = [
     difficulty: "Easy",
     priceRange: "NPR 500 - 1,500",
     bestSeason: "October – April",
-    coverImage: "/images/experiences/kakre-bihar-walk.jpg",
+    coverImage: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&q=80",
     isFeatured: false,
   },
 ];
@@ -358,7 +358,7 @@ export const demoItineraries = [
     estimatedCost: "NPR 8,000 - 15,000 per person",
     bestSeason: "October – March",
     groupSize: "2 - 8 people",
-    coverImage: "/images/itineraries/surkhet-essentials.jpg",
+    coverImage: "https://images.unsplash.com/photo-1526772662000-3f88f10405ff?w=800&q=80",
     isFeatured: true,
     days: [
       {
@@ -418,7 +418,7 @@ export const demoItineraries = [
     estimatedCost: "NPR 15,000 - 30,000 per person",
     bestSeason: "October – April",
     groupSize: "2 - 6 people",
-    coverImage: "/images/itineraries/karnali-gateway.jpg",
+    coverImage: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&q=80",
     isFeatured: true,
     days: [
       {
@@ -511,7 +511,7 @@ export const demoTrainingCourses = [
     prerequisites: "None — open to all above 18",
     schedule: "Mon - Fri, 10:00 AM - 1:00 PM",
     location: "Pahuna Training Center, Birendranagar",
-    coverImage: "/images/training/barista.jpg",
+    coverImage: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&q=80",
   },
   {
     title: "Hotel Management Fundamentals",
@@ -528,7 +528,7 @@ export const demoTrainingCourses = [
     prerequisites: "SLC/SEE or equivalent",
     schedule: "Mon - Fri, 7:00 AM - 10:00 AM",
     location: "Pahuna Training Center, Birendranagar",
-    coverImage: "/images/training/hotel-management.jpg",
+    coverImage: "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800&q=80",
   },
   {
     title: "Hospitality Service Excellence",
@@ -545,7 +545,7 @@ export const demoTrainingCourses = [
     prerequisites: "None",
     schedule: "Mon - Sat, 2:00 PM - 5:00 PM",
     location: "Pahuna Training Center, Birendranagar",
-    coverImage: "/images/training/service-excellence.jpg",
+    coverImage: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=800&q=80",
   },
 ];
 
@@ -561,7 +561,7 @@ export const demoBlogPosts = [
     tags: ["Surkhet", "Karnali", "Hidden Gems", "Nepal Travel"],
     authorName: "Pahuna Team",
     isPublished: true,
-    coverImage: "/images/blog/surkhet-destination.jpg",
+    coverImage: "https://images.unsplash.com/photo-1605640840605-14ac1855827b?w=800&q=80",
   },
   {
     title: "10 Things to Do in Birendranagar",
@@ -574,7 +574,7 @@ export const demoBlogPosts = [
     tags: ["Birendranagar", "Activities", "Things to Do", "City Guide"],
     authorName: "Pahuna Team",
     isPublished: true,
-    coverImage: "/images/blog/birendranagar-guide.jpg",
+    coverImage: "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=800&q=80",
   },
   {
     title: "A Complete Guide to Karnali Province for First-Time Visitors",
@@ -587,7 +587,7 @@ export const demoBlogPosts = [
     tags: ["Karnali Province", "Travel Guide", "Nepal", "First Time Visitors"],
     authorName: "Pahuna Team",
     isPublished: true,
-    coverImage: "/images/blog/karnali-guide.jpg",
+    coverImage: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&q=80",
   },
 ];
 
@@ -655,7 +655,7 @@ export const demoTestimonials = [
     quote:
       "I expected a simple stopover, but Surkhet blew me away. The Kakre Bihar ruins alone are worth the trip. Pahuna made the entire experience seamless — from booking to cultural tours.",
     rating: 5,
-    avatar: "/images/avatars/rajesh.jpg",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80",
   },
   {
     name: "Sarah Mitchell",
@@ -663,7 +663,7 @@ export const demoTestimonials = [
     quote:
       "Staying at a homestay in Latikoili was the highlight of my Nepal trip. The home-cooked meals, the valley views, and the warmth of the family — it felt like home. Surkhet is Nepal's best-kept secret.",
     rating: 5,
-    avatar: "/images/avatars/sarah.jpg",
+    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80",
   },
   {
     name: "Deepak Bhandari",
@@ -671,7 +671,7 @@ export const demoTestimonials = [
     quote:
       "The consulting team helped us rebrand our property and boost our online presence. Our bookings are up 40% since partnering with Pahuna. They truly understand the local market.",
     rating: 5,
-    avatar: "/images/avatars/deepak.jpg",
+    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&q=80",
   },
   {
     name: "Anita Karki",
@@ -679,7 +679,7 @@ export const demoTestimonials = [
     quote:
       "The barista training program changed my life. I went from zero coffee knowledge to running my own café in Birendranagar. The instructors were world-class and the curriculum was hands-on.",
     rating: 5,
-    avatar: "/images/avatars/anita.jpg",
+    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&q=80",
   },
 ];
 

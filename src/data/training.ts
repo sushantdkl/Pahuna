@@ -210,6 +210,7 @@ export const trainingCourses: TrainingCourse[] = [
         "Latte art",
         "Café startup consulting",
       ],
+      image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&q=80",
     },
 
     certification: "Pahuna Academy — Professional Barista Certificate",
@@ -343,6 +344,7 @@ export const trainingCourses: TrainingCourse[] = [
         "Revenue management",
         "Staff development",
       ],
+      image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=200&q=80",
     },
 
     certification:
@@ -474,6 +476,7 @@ export const trainingCourses: TrainingCourse[] = [
         "PMS systems",
         "Revenue management",
       ],
+      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&q=80",
     },
 
     certification:
@@ -594,6 +597,7 @@ export const trainingCourses: TrainingCourse[] = [
         "Quality inspection",
         "Laundry operations",
       ],
+      image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&q=80",
     },
 
     certification:
@@ -714,6 +718,7 @@ export const trainingCourses: TrainingCourse[] = [
         "Service design",
         "Communication skills",
       ],
+      image: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=200&q=80",
     },
 
     certification:
@@ -834,6 +839,7 @@ export const trainingCourses: TrainingCourse[] = [
         "Multi-property operations",
         "Strategic planning",
       ],
+      image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=200&q=80",
     },
 
     certification:
@@ -905,6 +911,7 @@ export const studentTestimonials: StudentTestimonial[] = [
     company: "Himalayan Coffee House, Kathmandu",
     quote:
       "The barista course at Pahuna Academy gave me hands-on skills I couldn't learn anywhere else in Karnali. Within 3 months of graduating, I was hired as Head Barista at one of Kathmandu's top cafés.",
+    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80",
   },
   {
     id: "t2",
@@ -915,6 +922,7 @@ export const studentTestimonials: StudentTestimonial[] = [
     company: "Hotel Barahi, Pokhara",
     quote:
       "I came from a completely non-hospitality background. The 3-month hotel management program gave me the foundation and confidence to start my career. The internship was invaluable.",
+    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&q=80",
   },
   {
     id: "t3",
@@ -925,6 +933,7 @@ export const studentTestimonials: StudentTestimonial[] = [
     company: "Pahuna",
     quote:
       "I started as a room attendant after the training. Within 8 months, I was promoted to supervisor. The quality inspection skills I learned set me apart from other candidates.",
+    image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&q=80",
   },
   {
     id: "t4",
@@ -935,6 +944,7 @@ export const studentTestimonials: StudentTestimonial[] = [
     company: "Landmark Resort, Chitwan",
     quote:
       "The soft skills course changed how I interact with guests. My manager noticed the difference immediately. Within 2 months, I was moved to Guest Relations — a role I love.",
+    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80",
   },
 ];
 
