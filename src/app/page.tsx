@@ -83,11 +83,11 @@ export default function HomePage() {
       {/* 1. HERO SECTION                                                    */}
       {/* ================================================================= */}
       <section className="relative min-h-[92vh] flex items-center overflow-hidden">
-        {/* Gradient overlay — premium deep green */}
-        <div className="absolute inset-0 bg-linear-to-br from-primary via-primary/90 to-primary/80" />
+        {/* Gradient overlay — premium deep navy */}
+        <div className="absolute inset-0 bg-linear-to-br from-slate-950 via-slate-900 to-indigo-950" />
         {/* Decorative blurs — subtle, organic */}
         <div className="absolute -top-20 right-0 w-[30rem] h-[30rem] bg-white/[0.04] rounded-full blur-3xl" />
-        <div className="absolute bottom-0 -left-20 w-[32rem] h-[32rem] bg-primary/25 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 -left-20 w-[32rem] h-[32rem] bg-indigo-500/8 rounded-full blur-3xl" />
         <div className="absolute top-1/2 left-1/2 w-[40rem] h-[40rem] bg-white/[0.02] rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
 
         <Container className="relative z-10 py-24">
@@ -884,10 +884,10 @@ export default function HomePage() {
       {/* ================================================================= */}
       {/* 12. CTA FOOTER BLOCK                                               */}
       {/* ================================================================= */}
-      <section className="py-28 bg-linear-to-br from-primary via-primary/90 to-primary/80 text-white relative overflow-hidden">
+      <section className="py-28 bg-linear-to-br from-slate-950 via-slate-900 to-indigo-950 text-white relative overflow-hidden">
         {/* Decorative blurs */}
         <div className="absolute -top-10 right-0 w-80 h-80 bg-white/[0.04] rounded-full blur-3xl" />
-        <div className="absolute bottom-0 -left-10 w-[28rem] h-[28rem] bg-primary/20 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 -left-10 w-[28rem] h-[28rem] bg-indigo-500/10 rounded-full blur-3xl" />
 
         <Container className="relative z-10">
           <div className="mx-auto max-w-3xl text-center">

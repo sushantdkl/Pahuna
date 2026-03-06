@@ -22,7 +22,7 @@ export default function BlogPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative bg-linear-to-br from-primary/10 via-primary/5 to-background py-20">
+      <section className="relative bg-linear-to-br from-slate-100/80 via-indigo-50/40 to-background py-20">
         <Container>
           <div className="mx-auto max-w-2xl text-center">
             <Badge variant="secondary" className="mb-4">

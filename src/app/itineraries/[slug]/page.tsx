@@ -50,7 +50,7 @@ export default async function ItineraryDetailPage({
   return (
     <>
       {/* Hero */}
-      <section className="relative bg-linear-to-br from-primary/10 via-primary/5 to-background py-16">
+      <section className="relative bg-linear-to-br from-slate-100/80 via-indigo-50/40 to-background py-16">
         <Container>
           <nav className="mb-6 flex items-center gap-2 text-sm text-muted-foreground">
             <Link href="/" className="hover:text-primary">

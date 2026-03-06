@@ -39,7 +39,7 @@ export default function AboutPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative bg-linear-to-b from-primary/[0.06] via-primary/[0.03] to-background py-24">
+      <section className="relative bg-linear-to-b from-slate-100/60 via-indigo-50/30 to-background py-24">
         <Container>
           <div className="mx-auto max-w-3xl text-center">
             <Badge variant="secondary" className="mb-5">

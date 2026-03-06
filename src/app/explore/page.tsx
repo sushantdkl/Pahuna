@@ -246,7 +246,7 @@ export default function ExplorePage() {
       </section>
 
       {/* ── CTA ── */}
-      <section className="py-20 bg-linear-to-br from-primary via-primary/95 to-emerald-900 text-white relative overflow-hidden">
+      <section className="py-20 bg-linear-to-br from-slate-950 via-slate-900 to-indigo-950 text-white relative overflow-hidden">
         <div className="absolute top-10 right-10 w-56 h-56 bg-white/5 rounded-full blur-3xl" />
         <div className="absolute bottom-10 left-10 w-72 h-72 bg-amber-400/10 rounded-full blur-3xl" />
         <Container className="relative z-10">

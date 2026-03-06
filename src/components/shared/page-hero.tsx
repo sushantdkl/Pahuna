@@ -33,8 +33,8 @@ export function PageHero({
       className={cn(
         "relative py-24 overflow-hidden",
         isGradient
-          ? "bg-linear-to-br from-primary via-primary/90 to-primary/80 text-white"
-          : "bg-linear-to-b from-primary/[0.06] via-primary/[0.03] to-background",
+          ? "bg-linear-to-br from-slate-950 via-slate-900 to-indigo-950 text-white"
+          : "bg-linear-to-b from-slate-100/60 via-indigo-50/30 to-background",
         className
       )}
     >
@@ -42,7 +42,7 @@ export function PageHero({
       {isGradient && (
         <>
           <div className="absolute -top-20 right-0 w-96 h-96 bg-white/[0.04] rounded-full blur-3xl" />
-          <div className="absolute bottom-0 -left-20 w-[28rem] h-[28rem] bg-primary/30 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 -left-20 w-[28rem] h-[28rem] bg-indigo-500/10 rounded-full blur-3xl" />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40rem] h-[40rem] bg-white/[0.02] rounded-full blur-3xl" />
         </>
       )}

@@ -63,7 +63,7 @@ export default function HotelsPage() {
       </section>
 
       {/* ── NEWSLETTER ── */}
-      <section className="py-20 bg-linear-to-br from-primary via-primary/90 to-primary/80 text-white relative overflow-hidden">
+      <section className="py-20 bg-linear-to-br from-slate-950 via-slate-900 to-indigo-950 text-white relative overflow-hidden">
         <div className="absolute -top-10 right-0 w-72 h-72 bg-white/[0.04] rounded-full blur-3xl" />
         <Container className="relative z-10">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8">
