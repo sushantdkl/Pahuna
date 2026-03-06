@@ -28,6 +28,18 @@ function createPrismaClient() {
   });
 }
 
-export const db = globalForPrisma.prisma ?? createPrismaClient();
+function getDb(): PrismaClient {
+  if (globalForPrisma.prisma) return globalForPrisma.prisma;
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = db;
+  const instance = createPrismaClient();
+  if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = instance;
+  return instance;
+}
+
+// Lazy proxy — only connects when a property is actually accessed at runtime.
+// This prevents build-time crashes when DATABASE_URL is not set (e.g. Vercel).
+export const db = new Proxy({} as PrismaClient, {
+  get(_target, prop) {
+    return getDb()[prop as keyof PrismaClient];
+  },
+});
