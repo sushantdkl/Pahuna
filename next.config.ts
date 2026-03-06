@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "*.surkhethotel.com",
+        hostname: "*.pahuna.com",
       },
     ],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920],
