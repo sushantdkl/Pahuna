@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Metadata } from "next";
 import {
   JsonLd,
@@ -243,6 +244,7 @@ export default function HomePage() {
                 isVerified={hotel.isVerified}
                 isFeatured={hotel.isFeatured}
                 amenities={hotel.amenities}
+                coverImage={hotel.images?.[0]}
               />
             ))}
           </div>
@@ -257,13 +259,14 @@ export default function HomePage() {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             {/* Left — visual */}
             <div className="relative order-2 lg:order-1">
-              <div className="aspect-[4/5] rounded-3xl bg-linear-to-br from-primary/15 via-primary/8 to-accent/10 overflow-hidden flex items-center justify-center">
-                <div className="text-center space-y-4">
-                  <Mountain className="h-24 w-24 text-primary/25 mx-auto" />
-                  <p className="text-sm text-muted-foreground">
-                    Surkhet Valley — Karnali Province
-                  </p>
-                </div>
+              <div className="aspect-[4/5] rounded-3xl overflow-hidden relative">
+                <Image
+                  src={surkhetCity.coverImage}
+                  alt="Surkhet Valley — Karnali Province"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover"
+                />
               </div>
               {/* Floating card: rating */}
               <div className="absolute -bottom-5 -right-5 bg-white rounded-2xl shadow-xl shadow-black/[0.06] px-5 py-4 border">
@@ -362,8 +365,14 @@ export default function HomePage() {
               >
                 <div className="relative aspect-[3/4] overflow-hidden bg-muted">
                   <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/30 to-transparent z-10" />
-                  <div className="h-full w-full bg-linear-to-br from-primary/20 to-primary/5 flex items-center justify-center transition-transform duration-700 group-hover:scale-110">
-                    <span className="text-5xl opacity-80">🏔️</span>
+                  <div className="h-full w-full relative transition-transform duration-700 group-hover:scale-110">
+                    <Image
+                      src={dest.coverImage}
+                      alt={dest.name}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                      className="object-cover"
+                    />
                   </div>
                   <div className="absolute bottom-4 left-4 right-4 z-20">
                     <Badge className="bg-white/20 text-white mb-2 text-xs backdrop-blur-sm border-0">
@@ -392,18 +401,14 @@ export default function HomePage() {
                 className="group overflow-hidden border hover:shadow-lg transition-all duration-300"
               >
                 <div className="relative aspect-video overflow-hidden bg-muted">
-                  <div className="h-full w-full bg-linear-to-br from-primary/15 to-primary/5 flex items-center justify-center transition-transform duration-700 group-hover:scale-105">
-                    <span className="text-4xl">
-                      {exp.category === "ADVENTURE"
-                        ? "🥾"
-                        : exp.category === "CULTURE"
-                          ? "🎭"
-                          : exp.category === "NATURE"
-                            ? "🦅"
-                            : exp.category === "HERITAGE"
-                              ? "🏛️"
-                              : "🍛"}
-                    </span>
+                  <div className="h-full w-full relative transition-transform duration-700 group-hover:scale-105">
+                    <Image
+                      src={exp.coverImage}
+                      alt={exp.title}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                      className="object-cover"
+                    />
                   </div>
                   <Badge className="absolute top-3 left-3 bg-white/90 text-foreground text-xs">
                     {exp.category}
@@ -443,9 +448,13 @@ export default function HomePage() {
               >
                 <div className="grid sm:grid-cols-5">
                   <div className="sm:col-span-2 relative aspect-square sm:aspect-auto overflow-hidden bg-muted min-h-[200px]">
-                    <div className="h-full w-full bg-linear-to-br from-primary/20 to-primary/5 flex items-center justify-center">
-                      <span className="text-5xl">🗺️</span>
-                    </div>
+                    <Image
+                      src={itin.coverImage}
+                      alt={itin.title}
+                      fill
+                      sizes="(max-width: 640px) 100vw, 40vw"
+                      className="object-cover"
+                    />
                   </div>
                   <CardContent className="sm:col-span-3 p-6 flex flex-col justify-center">
                     <Badge variant="outline" className="w-fit mb-3">
@@ -675,8 +684,14 @@ export default function HomePage() {
                 className="group overflow-hidden border hover:shadow-lg transition-all duration-300"
               >
                 <div className="aspect-[16/9] overflow-hidden bg-muted relative">
-                  <div className="h-full w-full bg-linear-to-br from-primary/15 to-primary/5 flex items-center justify-center transition-transform duration-700 group-hover:scale-105">
-                    <GraduationCap className="h-16 w-16 text-primary/20" />
+                  <div className="h-full w-full relative transition-transform duration-700 group-hover:scale-105">
+                    <Image
+                      src={course.coverImage}
+                      alt={course.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className="object-cover"
+                    />
                   </div>
                   <Badge className="absolute top-3 left-3 bg-white/90 text-foreground text-xs">
                     {course.category}
@@ -814,11 +829,14 @@ export default function HomePage() {
                   </p>
                   <Separator className="mb-4" />
                   <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-sm">
-                      {t.name
-                        .split(" ")
-                        .map((w) => w[0])
-                        .join("")}
+                    <div className="relative h-10 w-10 rounded-full overflow-hidden">
+                      <Image
+                        src={t.avatar}
+                        alt={t.name}
+                        fill
+                        sizes="40px"
+                        className="object-cover"
+                      />
                     </div>
                     <div>
                       <p className="font-semibold text-sm">{t.name}</p>
@@ -849,8 +867,14 @@ export default function HomePage() {
                 className="group overflow-hidden border hover:shadow-lg transition-all duration-300"
               >
                 <div className="aspect-[16/9] overflow-hidden bg-muted relative">
-                  <div className="h-full w-full bg-linear-to-br from-primary/15 to-primary/5 flex items-center justify-center transition-transform duration-700 group-hover:scale-105">
-                    <BookOpen className="h-14 w-14 text-primary/20" />
+                  <div className="h-full w-full relative transition-transform duration-700 group-hover:scale-105">
+                    <Image
+                      src={post.coverImage}
+                      alt={post.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className="object-cover"
+                    />
                   </div>
                   {post.category && (
                     <Badge className="absolute top-3 left-3 bg-white/90 text-foreground text-xs">

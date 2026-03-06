@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { Tag, ArrowRight, BookOpen } from "lucide-react";
 import { Container } from "@/components/layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -49,9 +50,15 @@ export default function BlogPage() {
                 key={post.slug}
                 className="group overflow-hidden flex flex-col hover:shadow-lg transition-shadow"
               >
-                <div className="aspect-[16/10] overflow-hidden bg-muted">
-                  <div className="h-full w-full bg-linear-to-br from-primary/20 to-primary/5 flex items-center justify-center transition-transform duration-500 group-hover:scale-105">
-                    <BookOpen className="h-16 w-16 text-primary/30" />
+                <div className="aspect-[16/10] overflow-hidden bg-muted relative">
+                  <div className="h-full w-full relative transition-transform duration-500 group-hover:scale-105">
+                    <Image
+                      src={post.coverImage}
+                      alt={post.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className="object-cover"
+                    />
                   </div>
                 </div>
                 <CardHeader>

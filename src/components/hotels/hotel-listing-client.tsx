@@ -24,6 +24,7 @@ interface HotelListingClientProps {
     isVerified: boolean;
     isFeatured: boolean;
     amenities: string[];
+    images: string[];
   }>;
 }
 
@@ -71,6 +72,7 @@ export function HotelListingClient({ hotels }: HotelListingClientProps) {
                 isVerified={hotel.isVerified}
                 isFeatured={hotel.isFeatured}
                 amenities={hotel.amenities}
+                coverImage={hotel.images?.[0]}
               />
             ))}
           </div>

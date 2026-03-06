@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import {
   MapPin,
   Mountain,
@@ -113,11 +114,14 @@ export default function ExplorePage() {
               </div>
             </div>
             <div className="relative">
-              <div className="aspect-[4/5] rounded-2xl bg-linear-to-br from-primary/20 via-primary/10 to-amber-100/30 overflow-hidden flex items-center justify-center shadow-inner">
-                <div className="text-center space-y-4">
-                  <Mountain className="h-24 w-24 text-primary/30 mx-auto" />
-                  <p className="text-sm text-muted-foreground">Surkhet Valley — Karnali Province</p>
-                </div>
+              <div className="aspect-[4/5] rounded-2xl overflow-hidden relative shadow-inner">
+                <Image
+                  src={surkhetCity.coverImage}
+                  alt="Surkhet Valley — Karnali Province"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover"
+                />
               </div>
               <div className="absolute -bottom-4 -left-4 bg-white rounded-xl shadow-xl px-5 py-3 border">
                 <div className="flex items-center gap-2">
@@ -144,8 +148,14 @@ export default function ExplorePage() {
                 <Card key={dest.slug} className="group overflow-hidden border-0 shadow-md hover:shadow-xl transition-all">
                   <div className="relative aspect-[3/4] overflow-hidden bg-muted">
                     <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/30 to-transparent z-10" />
-                    <div className="h-full w-full bg-linear-to-br from-primary/20 to-primary/5 flex items-center justify-center transition-transform duration-700 group-hover:scale-110">
-                      <span className="text-5xl opacity-80">🏔️</span>
+                    <div className="h-full w-full relative transition-transform duration-700 group-hover:scale-110">
+                      <Image
+                        src={dest.coverImage}
+                        alt={dest.name}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 25vw"
+                        className="object-cover"
+                      />
                     </div>
                     <div className="absolute top-3 right-3 z-20">
                       <Badge className="bg-white/90 text-foreground text-xs">{dest.entryFee}</Badge>
@@ -170,8 +180,14 @@ export default function ExplorePage() {
                 {otherDestinations.map((dest) => (
                   <Card key={dest.slug} className="overflow-hidden border hover:shadow-lg transition-all group">
                     <div className="relative aspect-video overflow-hidden bg-muted">
-                      <div className="h-full w-full bg-linear-to-br from-primary/20 to-primary/5 flex items-center justify-center transition-transform duration-500 group-hover:scale-105">
-                        <span className="text-5xl">🏔️</span>
+                      <div className="h-full w-full relative transition-transform duration-500 group-hover:scale-105">
+                        <Image
+                          src={dest.coverImage}
+                          alt={dest.name}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 33vw"
+                          className="object-cover"
+                        />
                       </div>
                       <Badge className="absolute top-3 left-3 bg-white/90 text-foreground text-xs">{dest.entryFee}</Badge>
                     </div>
@@ -198,10 +214,14 @@ export default function ExplorePage() {
             {featuredExperiences.map((exp) => (
               <Card key={exp.slug} className="group overflow-hidden border hover:shadow-lg transition-all">
                 <div className="relative aspect-video overflow-hidden bg-muted">
-                  <div className="h-full w-full bg-linear-to-br from-primary/20 to-primary/5 flex items-center justify-center transition-transform duration-500 group-hover:scale-105">
-                    <span className="text-4xl">
-                      {exp.category === "ADVENTURE" ? "🥾" : exp.category === "CULTURE" ? "🎭" : exp.category === "NATURE" ? "🦅" : exp.category === "HERITAGE" ? "🏛️" : "🍛"}
-                    </span>
+                  <div className="h-full w-full relative transition-transform duration-500 group-hover:scale-105">
+                    <Image
+                      src={exp.coverImage}
+                      alt={exp.title}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                      className="object-cover"
+                    />
                   </div>
                   <Badge className="absolute top-3 left-3 bg-white/90 text-foreground text-xs">{exp.category}</Badge>
                 </div>

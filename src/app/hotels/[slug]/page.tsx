@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import {
   Star,
   MapPin,
@@ -84,16 +85,28 @@ export default async function HotelDetailPage({
             <div className="lg:col-span-2 space-y-8">
               {/* Image Gallery Placeholder */}
               <div className="grid grid-cols-4 gap-3">
-                <div className="col-span-4 sm:col-span-3 aspect-video rounded-xl bg-linear-to-br from-primary/20 to-primary/5 overflow-hidden flex items-center justify-center">
-                  <span className="text-7xl">🏨</span>
+                <div className="col-span-4 sm:col-span-3 aspect-video rounded-xl overflow-hidden relative">
+                  <Image
+                    src={hotel.images[0]}
+                    alt={hotel.name}
+                    fill
+                    sizes="(max-width: 640px) 100vw, 75vw"
+                    className="object-cover"
+                    priority
+                  />
                 </div>
                 <div className="hidden sm:grid col-span-1 gap-3">
-                  <div className="aspect-square rounded-xl bg-linear-to-br from-primary/15 to-primary/5 flex items-center justify-center">
-                    <span className="text-3xl">🛏️</span>
-                  </div>
-                  <div className="aspect-square rounded-xl bg-linear-to-br from-primary/15 to-primary/5 flex items-center justify-center">
-                    <span className="text-3xl">🍽️</span>
-                  </div>
+                  {hotel.images.slice(1, 3).map((img, i) => (
+                    <div key={i} className="aspect-square rounded-xl overflow-hidden relative">
+                      <Image
+                        src={img}
+                        alt={`${hotel.name} - ${i + 2}`}
+                        fill
+                        sizes="25vw"
+                        className="object-cover"
+                      />
+                    </div>
+                  ))}
                 </div>
               </div>
 

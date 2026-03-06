@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, Clock, DollarSign, Users, Mountain, Map, Compass } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -49,9 +50,13 @@ export default function ItinerariesPage() {
                 <Card key={itin.slug} className="overflow-hidden border hover:shadow-lg transition-all">
                   <div className="grid md:grid-cols-3">
                     <div className="md:col-span-1 relative aspect-video md:aspect-auto overflow-hidden bg-muted min-h-[250px]">
-                      <div className="h-full w-full bg-linear-to-br from-primary/20 to-primary/5 flex items-center justify-center">
-                        <span className="text-6xl">🗺️</span>
-                      </div>
+                      <Image
+                        src={itin.coverImage}
+                        alt={itin.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                        className="object-cover"
+                      />
                       {itin.isFeatured && (
                         <Badge className="absolute top-3 left-3 bg-primary text-primary-foreground">Popular</Badge>
                       )}

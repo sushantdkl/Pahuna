@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { Clock, DollarSign, Mountain, ArrowRight, Compass } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -58,8 +59,14 @@ export default function ExperiencesPage() {
               {demoExperiences.map((exp) => (
                 <Card key={exp.slug} className="overflow-hidden border hover:shadow-lg transition-all group">
                   <div className="relative aspect-video overflow-hidden bg-muted">
-                    <div className="h-full w-full bg-linear-to-br from-primary/20 to-primary/5 flex items-center justify-center transition-transform duration-500 group-hover:scale-105">
-                      <span className="text-5xl">{categoryEmojis[exp.category] || "✨"}</span>
+                    <div className="h-full w-full relative transition-transform duration-500 group-hover:scale-105">
+                      <Image
+                        src={exp.coverImage}
+                        alt={exp.title}
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="object-cover"
+                      />
                     </div>
                     <Badge className="absolute top-3 left-3 bg-white/90 text-foreground text-xs">{exp.category}</Badge>
                     {exp.isFeatured && (
