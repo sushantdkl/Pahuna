@@ -1,0 +1,788 @@
+// =============================================================================
+// FUTURE DATA MODELS — OYO-Like Expansion Architecture
+// =============================================================================
+//
+// STATUS: REFERENCE ONLY — NOT USED BY PRISMA
+// These models define the target data architecture for Phase 2, Phase 3,
+// and National Scale phases. They are NOT part of the active schema.
+//
+// USAGE:
+//   When starting a new phase, move relevant models into schema.prisma,
+//   run `npx prisma migrate dev --name phase_X_feature_name`, and update
+//   the service layer.
+//
+// RELATIONSHIP TO CURRENT SCHEMA:
+//   - Extends existing: Hotel, User, Inquiry, PartnerApplication
+//   - New domains: Booking, Payment, Commission, Review, Franchise, Pricing
+//   - Geography (Country/Region/City) already supports multi-city
+//
+// =============================================================================
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PHASE 2A: PARTNER STANDARDIZATION & SCORING
+// ─────────────────────────────────────────────────────────────────────────────
+// Upgrade: Link User (HOTEL_PARTNER) → Hotel, add quality scoring
+
+// New enum — extends existing UserRole with future roles
+// enum UserRole {
+//   ADMIN
+//   EDITOR
+//   HOTEL_PARTNER
+//   TRAINING_MANAGER
+//   CONSULTING_MANAGER
+//   FRANCHISE_MANAGER      // Phase 3
+//   REGIONAL_MANAGER       // National Scale
+//   FINANCE                // Phase 2
+// }
+
+// Modify existing: User model — add partner link
+// model User {
+//   ... existing fields ...
+//   managedHotels    HotelPartner[]    // Phase 2: hotels this user manages
+//   bookings         Booking[]         // Phase 2: bookings by this user
+// }
+
+model HotelPartner {
+  id              String   @id @default(cuid())
+  userId          String
+  hotelId         String
+  role            String   @default("OWNER") // OWNER, MANAGER, STAFF
+  isActive        Boolean  @default(true)
+  permissions     String[] // ["manage_rooms", "view_bookings", "manage_pricing"]
+  
+  // user       User   @relation(fields: [userId], references: [id])
+  // hotel      Hotel  @relation(fields: [hotelId], references: [id])
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // @@unique([userId, hotelId])
+}
+
+model QualityScore {
+  id              String   @id @default(cuid())
+  hotelId         String
+  
+  // Scoring dimensions (0-100 each)
+  cleanliness     Int      @default(0)
+  amenityAccuracy Int      @default(0)  // Do listed amenities actually exist?
+  photoAccuracy   Int      @default(0)  // Do photos match reality?
+  safetyCompliance Int     @default(0)  // Fire safety, hygiene standards
+  guestSatisfaction Int    @default(0)  // Derived from reviews
+  responseTime    Int      @default(0)  // How fast partner responds to inquiries
+  
+  // Aggregate
+  overallScore    Int      @default(0)  // Weighted composite
+  tier            String   @default("STANDARD") // BASIC, STANDARD, PREMIUM, ELITE
+  
+  // Audit trail
+  lastAuditDate   DateTime?
+  lastAuditBy     String?
+  auditNotes      String?  // @db.Text
+  nextAuditDue    DateTime?
+  
+  // hotel      Hotel  @relation(fields: [hotelId], references: [id])
+  audits          QualityAudit[]
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // @@unique([hotelId])
+}
+
+model QualityAudit {
+  id              String   @id @default(cuid())
+  qualityScoreId  String
+  
+  // qualityScore QualityScore @relation(fields: [qualityScoreId], references: [id])
+  
+  auditorId       String?  // User who performed the audit
+  auditType       String   // INITIAL, ROUTINE, COMPLAINT, UPGRADE
+  
+  // Findings
+  findings        String?  // @db.Text — JSON: AuditFinding[]
+  photos          String[] // Evidence photos
+  recommendations String?  // @db.Text
+  
+  // Scoring changes
+  previousScore   Int?
+  newScore        Int?
+  previousTier    String?
+  newTier         String?
+  
+  completedAt     DateTime?
+  createdAt       DateTime @default(now())
+}
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PHASE 2B: ROOM INVENTORY & AVAILABILITY
+// ─────────────────────────────────────────────────────────────────────────────
+// Upgrade: Enhance existing RoomType model, add availability calendar
+
+// Modify existing RoomType — add these fields:
+// model RoomType {
+//   ... existing fields ...
+//   isActive        Boolean  @default(true)
+//   sortOrder       Int      @default(0)
+//   availability    RoomAvailability[]
+//   bookingItems    BookingItem[]
+// }
+
+model RoomAvailability {
+  id              String   @id @default(cuid())
+  roomTypeId      String
+  date            DateTime // @db.Date — specific calendar date
+  
+  // roomType    RoomType @relation(fields: [roomTypeId], references: [id], onDelete: Cascade)
+  
+  totalRooms      Int      // Total rooms of this type (snapshot)
+  bookedRooms     Int      @default(0)
+  blockedRooms    Int      @default(0) // Manually blocked by partner
+  
+  // Computed: availableRooms = totalRooms - bookedRooms - blockedRooms
+  
+  // Price override for this specific date
+  priceOverride   Int?     // null = use RoomType.price or PricingRule
+  minimumStay     Int      @default(1)
+  
+  // Status
+  isOpen          Boolean  @default(true) // Can accept bookings?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // @@unique([roomTypeId, date])
+  // @@index([date])
+  // @@index([roomTypeId, date, isOpen])
+}
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PHASE 2C: PRICING RULES
+// ─────────────────────────────────────────────────────────────────────────────
+
+model PricingRule {
+  id              String   @id @default(cuid())
+  hotelId         String
+  roomTypeId      String?  // null = applies to all room types
+  
+  // hotel       Hotel    @relation(fields: [hotelId], references: [id])
+  // roomType    RoomType? @relation(fields: [roomTypeId], references: [id])
+  
+  name            String   // "Festival Season", "Weekend Rate", "Last Minute"
+  ruleType        String   // SEASONAL, DAY_OF_WEEK, OCCUPANCY, EARLY_BIRD, LAST_MINUTE, PROMO
+  priority        Int      @default(0) // Higher priority rules override lower
+  
+  // Conditions
+  startDate       DateTime?
+  endDate         DateTime?
+  daysOfWeek      Int[]    // 0=Sun, 1=Mon, ..., 6=Sat — empty = all days
+  minOccupancy    Int?     // Trigger when occupancy exceeds this %
+  minAdvanceDays  Int?     // For EARLY_BIRD: minimum days before check-in
+  maxAdvanceDays  Int?     // For LAST_MINUTE: maximum days before check-in
+  
+  // Adjustment
+  adjustmentType  String   // PERCENTAGE, FIXED_AMOUNT
+  adjustmentValue Float    // e.g. 20 for 20% increase, -500 for NPR 500 discount
+  
+  // Constraints
+  minimumPrice    Int?     // Never go below this
+  maximumPrice    Int?     // Never go above this
+  
+  isActive        Boolean  @default(true)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // @@index([hotelId, isActive])
+  // @@index([ruleType])
+}
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PHASE 2D: BOOKING ENGINE
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Booking {
+  id                  String   @id @default(cuid())
+  bookingReference    String   // @unique — e.g. "SH-2026-000001"
+  
+  // Links
+  hotelId             String
+  guestId             String?  // User ID if guest has account
+  inquiryId           String?  // Original inquiry that led to this booking
+  
+  // hotel           Hotel    @relation(fields: [hotelId], references: [id])
+  // guest           User?    @relation(fields: [guestId], references: [id])
+  // inquiry         Inquiry? @relation(fields: [inquiryId], references: [id])
+  
+  // Guest info (denormalized — guest may not have account)
+  guestName           String
+  guestEmail          String
+  guestPhone          String
+  guestCountry        String?
+  guestIdType         String?  // CITIZENSHIP, PASSPORT, DRIVING_LICENSE
+  guestIdNumber       String?
+  
+  // Stay details
+  checkIn             DateTime
+  checkOut            DateTime
+  nights              Int
+  totalGuests         Int
+  totalRooms          Int
+  specialRequests     String?  // @db.Text
+  
+  // Pricing
+  subtotal            Int      // Room charges
+  taxes               Int      @default(0)
+  serviceFee          Int      @default(0)  // Platform fee charged to guest
+  discount            Int      @default(0)
+  totalAmount         Int      // subtotal + taxes + serviceFee - discount
+  currency            String   @default("NPR")
+  
+  // Status tracking
+  status              String   @default("PENDING")
+  // PENDING → CONFIRMED → PAYMENT_PENDING → PAID → CHECKED_IN → COMPLETED
+  // PENDING → CANCELLED / CONFIRMED → CANCELLED
+  // PAID → NO_SHOW / REFUNDED
+  
+  // Timestamps
+  confirmedAt         DateTime?
+  paidAt              DateTime?
+  checkedInAt         DateTime?
+  checkedOutAt        DateTime?
+  cancelledAt         DateTime?
+  cancellationReason  String?
+  
+  // Relations
+  items               BookingItem[]
+  payments            Payment[]
+  commission          Commission?
+  review              GuestReview?
+  
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  // @@unique([bookingReference])
+  // @@index([hotelId, status])
+  // @@index([guestEmail])
+  // @@index([checkIn, checkOut])
+}
+
+model BookingItem {
+  id              String   @id @default(cuid())
+  bookingId       String
+  roomTypeId      String
+  
+  // booking     Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  // roomType    RoomType @relation(fields: [roomTypeId], references: [id])
+  
+  roomTypeName    String   // Denormalized for history
+  quantity        Int      @default(1)
+  pricePerNight   Int
+  nights          Int
+  subtotal        Int      // quantity * pricePerNight * nights
+  
+  createdAt       DateTime @default(now())
+}
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PHASE 2E: PAYMENT SYSTEM
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Payment {
+  id                  String   @id @default(cuid())
+  bookingId           String
+  
+  // booking         Booking  @relation(fields: [bookingId], references: [id])
+  
+  amount              Int
+  currency            String   @default("NPR")
+  method              String   // ESEWA, KHALTI, CONNECT_IPS, BANK_TRANSFER, CASH, CARD
+  status              String   @default("PENDING")
+  // PENDING → PROCESSING → COMPLETED / FAILED
+  // COMPLETED → REFUNDED / PARTIALLY_REFUNDED
+  
+  // Gateway details
+  providerName        String?  // "esewa", "khalti", "connectips"
+  providerTxnId       String?  // Gateway transaction reference
+  providerResponse    String?  // @db.Text — raw JSON response for audit
+  
+  // Refund tracking
+  refundAmount        Int?
+  refundReason        String?
+  refundedAt          DateTime?
+  
+  paidAt              DateTime?
+  failedAt            DateTime?
+  failureReason       String?
+  
+  // Metadata
+  ipAddress           String?
+  userAgent           String?
+  
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  // @@index([bookingId])
+  // @@index([status])
+  // @@index([providerTxnId])
+}
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PHASE 2F: COMMISSION SYSTEM
+// ─────────────────────────────────────────────────────────────────────────────
+
+model CommissionRule {
+  id              String   @id @default(cuid())
+  hotelId         String?  // null = default rule for all hotels
+  
+  // hotel       Hotel?   @relation(fields: [hotelId], references: [id])
+  
+  name            String   // "Standard Commission", "Premium Partner Rate"
+  rateType        String   // PERCENTAGE, FLAT_PER_BOOKING, FLAT_PER_NIGHT
+  rate            Float    // e.g. 15 for 15%, or 500 for NPR 500
+  
+  // Tiers (for volume-based commission)
+  minMonthlyBookings  Int?     // Unlock lower rate after X bookings/month
+  maxMonthlyBookings  Int?
+  
+  isDefault       Boolean  @default(false)
+  isActive        Boolean  @default(true)
+  
+  effectiveFrom   DateTime?
+  effectiveTo     DateTime?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // @@index([hotelId])
+}
+
+model Commission {
+  id              String   @id @default(cuid())
+  bookingId       String   // @unique
+  hotelId         String
+  
+  // booking     Booking  @relation(fields: [bookingId], references: [id])
+  // hotel       Hotel    @relation(fields: [hotelId], references: [id])
+  
+  bookingAmount   Int
+  commissionRate  Float    // Actual rate applied (snapshot)
+  commissionAmount Int
+  
+  status          String   @default("PENDING")
+  // PENDING → INVOICED → SETTLED / WAIVED
+  
+  invoiceNumber   String?
+  invoicedAt      DateTime?
+  settledAt       DateTime?
+  settlementRef   String?  // Bank transfer reference
+  waivedReason    String?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // @@index([hotelId, status])
+  // @@index([status])
+}
+
+model CommissionPayout {
+  id              String   @id @default(cuid())
+  hotelId         String
+  
+  // hotel       Hotel    @relation(fields: [hotelId], references: [id])
+  
+  period          String   // "2026-03" — monthly settlement period
+  totalBookings   Int
+  totalRevenue    Int
+  totalCommission Int
+  netPayout       Int      // totalRevenue - totalCommission
+  
+  status          String   @default("CALCULATED")
+  // CALCULATED → APPROVED → TRANSFERRED → CONFIRMED
+  
+  approvedBy      String?
+  approvedAt      DateTime?
+  transferredAt   DateTime?
+  transferRef     String?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // @@index([hotelId, period])
+}
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PHASE 2G: GUEST REVIEWS
+// ─────────────────────────────────────────────────────────────────────────────
+
+model GuestReview {
+  id              String   @id @default(cuid())
+  bookingId       String   // @unique
+  hotelId         String
+  
+  // booking     Booking  @relation(fields: [bookingId], references: [id])
+  // hotel       Hotel    @relation(fields: [hotelId], references: [id])
+  
+  guestName       String
+  
+  // Ratings (1-5)
+  overallRating   Int
+  cleanliness     Int?
+  location        Int?
+  valueForMoney   Int?
+  service         Int?
+  amenities       Int?
+  
+  title           String?
+  comment         String?  // @db.Text
+  
+  // Hotel response
+  hotelResponse   String?  // @db.Text
+  respondedAt     DateTime?
+  
+  // Verification
+  isVerified      Boolean  @default(false) // Came from a confirmed booking
+  isPublished     Boolean  @default(false) // Admin approved for public display
+  
+  // Moderation
+  flagged         Boolean  @default(false)
+  flagReason      String?
+  moderatedBy     String?
+  moderatedAt     DateTime?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // @@index([hotelId, isPublished])
+  // @@index([overallRating])
+}
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PHASE 3A: FRANCHISE / MANAGED-PROPERTY MODEL
+// ─────────────────────────────────────────────────────────────────────────────
+
+model FranchiseAgreement {
+  id                  String   @id @default(cuid())
+  hotelId             String
+  
+  // hotel           Hotel    @relation(fields: [hotelId], references: [id])
+  
+  agreementType       String   // FRANCHISE, MANAGED, LEASED, REVENUE_SHARE
+  brandTier           String   // SURKHET_STAYS, SURKHET_SELECT, SURKHET_PREMIUM
+  
+  // Contract terms
+  startDate           DateTime
+  endDate             DateTime
+  autoRenew           Boolean  @default(false)
+  
+  // Financial terms
+  franchiseFee        Int?     // One-time fee
+  monthlyFee          Int?     // Fixed monthly
+  revenueSharePct     Float?   // % of revenue
+  minimumGuarantee    Int?     // Minimum monthly payment
+  
+  // Operational requirements
+  brandStandards      String?  // @db.Text — JSON: brand requirements checklist
+  renovationRequired  Boolean  @default(false)
+  renovationDeadline  DateTime?
+  trainingRequired    Boolean  @default(true)
+  technologyPackage   String?  // BASIC, STANDARD, FULL — PMS/channel manager tier
+  
+  // Status
+  status              String   @default("DRAFT")
+  // DRAFT → NEGOTIATION → SIGNED → ACTIVE → EXPIRED / TERMINATED
+  
+  signedAt            DateTime?
+  terminatedAt        DateTime?
+  terminationReason   String?
+  
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  // @@unique([hotelId])
+}
+
+model BrandStandard {
+  id              String   @id @default(cuid())
+  brandTier       String   // SURKHET_STAYS, SURKHET_SELECT, SURKHET_PREMIUM
+  category        String   // ROOM_QUALITY, AMENITIES, SERVICE, TECHNOLOGY, BRANDING
+  
+  requirement     String   // "Minimum 300 thread count bedding"
+  description     String?  // @db.Text
+  isRequired      Boolean  @default(true)  // Required vs recommended
+  weight          Int      @default(1)     // Importance for scoring
+  
+  sortOrder       Int      @default(0)
+  isActive        Boolean  @default(true)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // @@index([brandTier, category])
+}
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PHASE 3B: DYNAMIC PRICING & REVENUE MANAGEMENT
+// ─────────────────────────────────────────────────────────────────────────────
+
+model DemandForecast {
+  id              String   @id @default(cuid())
+  cityId          String
+  date            DateTime // @db.Date
+  
+  // city        City     @relation(fields: [cityId], references: [id])
+  
+  // Demand signals
+  searchVolume    Int?     // Platform search volume for this date
+  bookingPace     Float?   // Bookings per day trending
+  competitorPrice Float?   // Average competitor price
+  eventImpact     Float?   // Multiplier from local events/festivals
+  seasonalIndex   Float?   // Historical seasonal factor
+  
+  // Recommendation
+  recommendedMultiplier Float @default(1.0) // Suggested price multiplier
+  confidence      Float    @default(0.5)    // 0-1 confidence in recommendation
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // @@unique([cityId, date])
+}
+
+model LocalEvent {
+  id              String   @id @default(cuid())
+  cityId          String
+  
+  // city        City     @relation(fields: [cityId], references: [id])
+  
+  name            String
+  description     String?  // @db.Text
+  startDate       DateTime
+  endDate         DateTime
+  expectedImpact  String   // LOW, MEDIUM, HIGH, EXTREME
+  priceMultiplier Float    @default(1.0)
+  
+  isActive        Boolean  @default(true)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // @@index([cityId, startDate, endDate])
+}
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PHASE 3C: CHANNEL MANAGEMENT
+// ─────────────────────────────────────────────────────────────────────────────
+
+model ChannelConnection {
+  id              String   @id @default(cuid())
+  hotelId         String
+  
+  // hotel       Hotel    @relation(fields: [hotelId], references: [id])
+  
+  channelName     String   // "booking.com", "agoda", "tripadvisor", "goibibo"
+  channelHotelId  String?  // Hotel's ID on the external channel
+  
+  // Sync settings
+  syncAvailability Boolean @default(true)
+  syncPricing      Boolean @default(true)
+  syncBookings     Boolean @default(true)
+  
+  // Credentials (encrypted in production)
+  apiKey          String?
+  apiSecret       String?
+  
+  status          String   @default("DISCONNECTED")
+  // DISCONNECTED → CONNECTING → CONNECTED → ERROR
+  
+  lastSyncAt      DateTime?
+  lastError       String?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // @@unique([hotelId, channelName])
+}
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// NATIONAL SCALE: MULTI-CITY OPERATIONS
+// ─────────────────────────────────────────────────────────────────────────────
+
+model RegionalOffice {
+  id              String   @id @default(cuid())
+  name            String   // "Karnali Regional Office"
+  regionId        String
+  
+  // region      Region   @relation(fields: [regionId], references: [id])
+  
+  managerId       String?  // User ID of REGIONAL_MANAGER
+  address         String?
+  phone           String?
+  email           String?
+  
+  // Operational targets
+  targetHotels    Int?
+  targetRevenue   Int?     // Monthly target in NPR
+  targetBookings  Int?     // Monthly booking target
+  
+  isActive        Boolean  @default(true)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // @@unique([regionId])
+}
+
+model CityLaunch {
+  id              String   @id @default(cuid())
+  cityId          String
+  
+  // city        City     @relation(fields: [cityId], references: [id])
+  
+  // Launch planning
+  status          String   @default("SCOUTING")
+  // SCOUTING → PLANNING → ONBOARDING → SOFT_LAUNCH → LIVE → SCALING
+  
+  targetLaunchDate DateTime?
+  actualLaunchDate DateTime?
+  
+  // Market research
+  estimatedHotels     Int?   // Total hotels in city
+  targetPartnerHotels Int?   // How many we want to onboard
+  currentPartners     Int    @default(0)
+  avgDailyRate        Int?   // Market average ADR in NPR
+  competitorPresence  String? // @db.Text — JSON: competitor analysis
+  
+  // Operations
+  localManagerId      String? // User ID
+  bdTeamSize          Int     @default(0) // Business development team
+  
+  notes               String? // @db.Text
+  
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  // @@unique([cityId])
+}
+
+model PartnerOnboardingChecklist {
+  id              String   @id @default(cuid())
+  hotelId         String
+  
+  // hotel       Hotel    @relation(fields: [hotelId], references: [id])
+  
+  // Onboarding steps (tracked as completion flags)
+  agreementSigned     Boolean @default(false)
+  photoshootDone      Boolean @default(false)
+  listingCreated      Boolean @default(false)
+  roomsConfigured     Boolean @default(false)
+  pricingSet          Boolean @default(false)
+  bankDetailsVerified Boolean @default(false)
+  trainingCompleted   Boolean @default(false)
+  qualityAuditPassed  Boolean @default(false)
+  testBookingDone     Boolean @default(false)
+  goLiveApproved      Boolean @default(false)
+  
+  // Status
+  completionPct   Int      @default(0) // Computed 0-100
+  status          String   @default("NOT_STARTED")
+  // NOT_STARTED → IN_PROGRESS → COMPLETED → LIVE
+  
+  assignedTo      String?  // BD team member
+  startedAt       DateTime?
+  completedAt     DateTime?
+  
+  notes           String?  // @db.Text
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // @@unique([hotelId])
+}
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// NATIONAL SCALE: ANALYTICS & REPORTING
+// ─────────────────────────────────────────────────────────────────────────────
+
+model DailyMetrics {
+  id              String   @id @default(cuid())
+  date            DateTime // @db.Date
+  
+  // Scope
+  hotelId         String?  // null = platform-wide
+  cityId          String?  // null = all cities
+  
+  // Key metrics
+  pageViews       Int      @default(0)
+  searches        Int      @default(0)
+  inquiries       Int      @default(0)
+  bookings        Int      @default(0)
+  revenue         Int      @default(0)
+  cancellations   Int      @default(0)
+  avgRating       Float?
+  occupancyRate   Float?   // % (0-100)
+  
+  // Computed
+  conversionRate  Float?   // bookings / searches
+  avgBookingValue Int?
+  
+  createdAt       DateTime @default(now())
+
+  // @@unique([date, hotelId, cityId])
+  // @@index([date])
+  // @@index([hotelId, date])
+}
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// NATIONAL SCALE: LOYALTY & REWARDS (Future consideration)
+// ─────────────────────────────────────────────────────────────────────────────
+
+model LoyaltyProgram {
+  id              String   @id @default(cuid())
+  userId          String   // @unique
+  
+  // user        User     @relation(fields: [userId], references: [id])
+  
+  tier            String   @default("BRONZE") // BRONZE, SILVER, GOLD, PLATINUM
+  totalPoints     Int      @default(0)
+  availablePoints Int      @default(0)
+  totalBookings   Int      @default(0)
+  totalSpend      Int      @default(0)
+  
+  // Tier thresholds are defined in application config, not DB
+  
+  memberSince     DateTime @default(now())
+  tierUpdatedAt   DateTime?
+  
+  // transactions LoyaltyTransaction[]
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model LoyaltyTransaction {
+  id              String   @id @default(cuid())
+  loyaltyId       String
+  
+  // loyalty     LoyaltyProgram @relation(fields: [loyaltyId], references: [id])
+  
+  type            String   // EARN, REDEEM, EXPIRE, BONUS, ADJUSTMENT
+  points          Int      // Positive for earn, negative for redeem
+  description     String   // "Booking SH-2026-000123", "Welcome bonus"
+  bookingId       String?
+  
+  createdAt       DateTime @default(now())
+}
