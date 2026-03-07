@@ -25,6 +25,7 @@ import { InquiryForm } from "@/components/forms/inquiry-form";
 import { CallbackForm } from "@/components/forms/callback-form";
 import { demoHotels, getHotelSlugs } from "@/services";
 import { formatPrice } from "@/lib/utils";
+import { HotelMapSection } from "@/components/maps/hotel-map-section";
 
 interface HotelDetailPageProps {
   params: Promise<{ slug: string }>;
@@ -229,6 +230,19 @@ export default async function HotelDetailPage({
                   )}
                 </div>
               </div>
+
+              {/* Location Map */}
+              {hotel.latitude && hotel.longitude && (
+                <div>
+                  <h2 className="text-xl font-semibold mb-4">Location</h2>
+                  <HotelMapSection
+                    lat={hotel.latitude}
+                    lng={hotel.longitude}
+                    name={hotel.name}
+                    address={hotel.address}
+                  />
+                </div>
+              )}
 
               {/* Policies */}
               <div className="rounded-2xl bg-primary/5 p-6">

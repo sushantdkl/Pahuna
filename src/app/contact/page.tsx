@@ -8,6 +8,7 @@ import { SITE_CONFIG } from "@/lib/constants";
 import { ContactForm } from "@/components/forms/contact-form";
 import { JsonLd, localBusinessJsonLd } from "@/lib/structured-data";
 import { contactCopy } from "@/data/site-copy";
+import { ContactMapSection } from "@/components/maps/contact-map-section";
 
 export const metadata: Metadata = {
   title: contactCopy.metadata.title,
@@ -96,18 +97,10 @@ export default function ContactPage() {
         </Container>
       </section>
 
-      {/* Map Placeholder */}
+      {/* Map Section */}
       <section className="py-20">
         <Container>
-          <div className="rounded-2xl bg-muted/30 border border-dashed border-muted-foreground/15 h-80 flex items-center justify-center">
-            <div className="text-center text-muted-foreground">
-              <MapPin className="h-12 w-12 mx-auto mb-3 opacity-30" />
-              <p className="font-medium">Map Integration</p>
-              <p className="text-sm">
-                Google Maps embed will be added here with Surkhet location
-              </p>
-            </div>
-          </div>
+          <ContactMapSection />
         </Container>
       </section>
     </>

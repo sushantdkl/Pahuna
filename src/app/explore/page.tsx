@@ -26,6 +26,7 @@ import { PageHero } from "@/components/shared/page-hero";
 import { EmptyState } from "@/components/shared/empty-state";
 import { surkhetCity, demoDestinations, demoExperiences } from "@/services";
 import { exploreCopy } from "@/data/site-copy";
+import { ExploreMapSection } from "@/components/maps/explore-map-section";
 
 export const metadata: Metadata = {
   title: exploreCopy.metadata.title,
@@ -134,6 +135,14 @@ export default function ExplorePage() {
               </div>
             </div>
           </div>
+        </Container>
+      </section>
+
+      {/* ── DESTINATION MAP ── */}
+      <section className="py-14">
+        <Container>
+          <SectionHeader title="Explore the Map" subtitle="Key destinations around the Surkhet Valley" />
+          <ExploreMapSection destinations={demoDestinations} />
         </Container>
       </section>
 

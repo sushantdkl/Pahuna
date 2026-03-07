@@ -44,6 +44,8 @@ export const demoHotels = [
       "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80",
       "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=800&q=80",
     ],
+    latitude: 28.601,
+    longitude: 81.621,
   },
   {
     name: "Surkhet Homestay Paradise",
@@ -73,6 +75,8 @@ export const demoHotels = [
       "https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=800&q=80",
       "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80",
     ],
+    latitude: 28.588,
+    longitude: 81.636,
   },
   {
     name: "Hotel Green Valley",
@@ -102,6 +106,8 @@ export const demoHotels = [
       "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800&q=80",
       "https://images.unsplash.com/photo-1618773928121-c32f3bcb5f6e?w=800&q=80",
     ],
+    latitude: 28.596,
+    longitude: 81.618,
   },
   {
     name: "Karnali Boutique Resort",
@@ -136,6 +142,8 @@ export const demoHotels = [
       "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&q=80",
       "https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=800&q=80",
     ],
+    latitude: 28.609,
+    longitude: 81.612,
   },
   {
     name: "Birendranagar Lodge",
@@ -158,6 +166,8 @@ export const demoHotels = [
       "https://images.unsplash.com/photo-1587381420270-cdd3a8386c5d?w=800&q=80",
       "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?w=800&q=80",
     ],
+    latitude: 28.599,
+    longitude: 81.625,
   },
   {
     name: "Hotel Himalayan View",
@@ -190,6 +200,8 @@ export const demoHotels = [
       "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=800&q=80",
       "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800&q=80",
     ],
+    latitude: 28.605,
+    longitude: 81.628,
   },
 ];
 
@@ -281,6 +293,8 @@ export const demoExperiences = [
     bestSeason: "October – March",
     coverImage: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80",
     isFeatured: true,
+    latitude: 28.607,
+    longitude: 81.622,
   },
   {
     title: "Traditional Tharu Cultural Evening",
@@ -296,6 +310,8 @@ export const demoExperiences = [
     bestSeason: "Year-round",
     coverImage: "https://images.unsplash.com/photo-1533669955142-6a73332af4db?w=800&q=80",
     isFeatured: true,
+    latitude: 28.592,
+    longitude: 81.630,
   },
   {
     title: "Bulbule Lake Birdwatching",
@@ -311,6 +327,8 @@ export const demoExperiences = [
     bestSeason: "November – February",
     coverImage: "https://images.unsplash.com/photo-1452570053594-1b985d6ea890?w=800&q=80",
     isFeatured: true,
+    latitude: 28.597,
+    longitude: 81.630,
   },
   {
     title: "Surkhet Food Trail",
@@ -326,6 +344,8 @@ export const demoExperiences = [
     bestSeason: "Year-round",
     coverImage: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=80",
     isFeatured: true,
+    latitude: 28.600,
+    longitude: 81.618,
   },
   {
     title: "Kakre Bihar Heritage Walk",
@@ -341,6 +361,8 @@ export const demoExperiences = [
     bestSeason: "October – April",
     coverImage: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&q=80",
     isFeatured: false,
+    latitude: 28.585,
+    longitude: 81.648,
   },
 ];
 

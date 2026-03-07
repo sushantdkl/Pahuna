@@ -8,6 +8,7 @@ import { NewsletterForm } from "@/components/forms/newsletter-form";
 import { HotelListingClient } from "@/components/hotels/hotel-listing-client";
 import { demoHotels } from "@/services";
 import { hotelsCopy } from "@/data/site-copy";
+import { HotelsMapSection } from "@/components/maps/hotels-map-section";
 
 export const metadata: Metadata = {
   title: hotelsCopy.metadata.title,
@@ -33,7 +34,10 @@ export default function HotelsPage() {
       {/* ── LISTING + FILTERS ── */}
       <section className="py-14">
         <Container>
-          <HotelListingClient hotels={demoHotels} />
+          <HotelsMapSection hotels={demoHotels} />
+          <div className="mt-8">
+            <HotelListingClient hotels={demoHotels} />
+          </div>
         </Container>
       </section>
 

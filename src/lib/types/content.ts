@@ -103,6 +103,8 @@ export interface ExperienceContent extends ContentBase, SEOFields, PublishableCo
   priceRange?: string;
   bestSeason?: string;
   cityId: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 // ── Itineraries ──
@@ -114,6 +116,8 @@ export interface ItineraryDayContent {
   activities: string[];
   meals?: string;
   overnight?: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface ItineraryContent extends ContentBase, SEOFields, PublishableContent {

@@ -11,6 +11,7 @@ import { PageHero } from "@/components/shared/page-hero";
 import { EmptyState } from "@/components/shared/empty-state";
 import { demoExperiences } from "@/services";
 import { EXPERIENCE_CATEGORIES } from "@/lib/constants";
+import { ExperiencesMapSection } from "@/components/maps/experiences-map-section";
 
 export const metadata: Metadata = {
   title: "Things to Do in Surkhet",
@@ -48,6 +49,13 @@ export default function ExperiencesPage() {
               </Badge>
             ))}
           </div>
+        </Container>
+      </section>
+
+      {/* ── EXPERIENCE MAP ── */}
+      <section className="py-10">
+        <Container>
+          <ExperiencesMapSection experiences={demoExperiences} />
         </Container>
       </section>
 
