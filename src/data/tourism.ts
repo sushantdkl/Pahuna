@@ -288,6 +288,8 @@ export interface PackageDay {
   highlights: string[];
   meals: string;
   overnight: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface TripPackage {
@@ -346,6 +348,8 @@ export const tripPackages: TripPackage[] = [
         highlights: ["Check into budget lodge", "Walking tour of Birendranagar", "Bulbule Lake sunset stroll"],
         meals: "Lunch, Dinner (dal bhat)",
         overnight: "Budget lodge, Birendranagar",
+        latitude: 28.597,
+        longitude: 81.630,
       },
       {
         dayNumber: 2,
@@ -353,6 +357,8 @@ export const tripPackages: TripPackage[] = [
         highlights: ["Kakre Bihar ruins (free entry area)", "Local market walk", "Street food tasting"],
         meals: "Breakfast, Lunch, Dinner",
         overnight: "Budget lodge, Birendranagar",
+        latitude: 28.585,
+        longitude: 81.648,
       },
       {
         dayNumber: 3,
@@ -360,6 +366,8 @@ export const tripPackages: TripPackage[] = [
         highlights: ["Early morning Deuti Bajai hike", "Local breakfast", "Departure"],
         meals: "Breakfast",
         overnight: "—",
+        latitude: 28.607,
+        longitude: 81.622,
       },
     ],
     isFeatured: true,
@@ -426,6 +434,8 @@ export const tripPackages: TripPackage[] = [
         highlights: ["Hotel check-in (AC room)", "Guided city tour", "Bulbule Lake boat ride", "Restaurant welcome dinner"],
         meals: "Lunch, Dinner",
         overnight: "Mid-range hotel",
+        latitude: 28.597,
+        longitude: 81.630,
       },
       {
         dayNumber: 2,
@@ -433,6 +443,8 @@ export const tripPackages: TripPackage[] = [
         highlights: ["Kakre Bihar guided tour", "Cave entry", "Surkhet Food Trail", "Tharu cultural evening"],
         meals: "Breakfast, Lunch, Dinner",
         overnight: "Mid-range hotel",
+        latitude: 28.585,
+        longitude: 81.648,
       },
       {
         dayNumber: 3,
@@ -440,6 +452,8 @@ export const tripPackages: TripPackage[] = [
         highlights: ["Deuti Bajai sunrise hike", "Hotel breakfast", "Souvenir shopping", "Departure transfer"],
         meals: "Breakfast",
         overnight: "—",
+        latitude: 28.607,
+        longitude: 81.622,
       },
     ],
     isFeatured: true,
@@ -506,6 +520,8 @@ export const tripPackages: TripPackage[] = [
         highlights: ["Resort check-in with welcome drink", "Private city tour", "Spa treatment", "Multi-course welcome dinner"],
         meals: "Lunch, Dinner",
         overnight: "Karnali Boutique Resort",
+        latitude: 28.609,
+        longitude: 81.612,
       },
       {
         dayNumber: 2,
@@ -513,6 +529,8 @@ export const tripPackages: TripPackage[] = [
         highlights: ["Private Kakre Bihar tour with archaeologist", "Exclusive cave visit", "Chef's table lunch", "Private Tharu cultural performance"],
         meals: "Breakfast, Lunch, Dinner",
         overnight: "Karnali Boutique Resort",
+        latitude: 28.585,
+        longitude: 81.648,
       },
       {
         dayNumber: 3,
@@ -520,6 +538,8 @@ export const tripPackages: TripPackage[] = [
         highlights: ["Private sunrise hike", "Resort spa checkout", "Premium souvenir shopping", "Airport/bus transfer"],
         meals: "Breakfast, Brunch",
         overnight: "—",
+        latitude: 28.607,
+        longitude: 81.622,
       },
     ],
     isFeatured: true,

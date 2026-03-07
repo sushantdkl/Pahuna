@@ -23,6 +23,7 @@ import { Separator } from "@/components/ui/separator";
 import { PackageCard } from "@/components/tourism/package-card";
 import { tripPackages, getPackageSlugs } from "@/services";
 import { formatPrice } from "@/lib/utils";
+import { RouteMapSection } from "@/components/maps/route-map-section";
 
 interface PackageDetailPageProps {
   params: Promise<{ slug: string }>;
@@ -240,6 +241,11 @@ export default async function PackageDetailPage({
           <h2 className="text-3xl font-bold tracking-tight mb-10">
             Day-by-Day Plan
           </h2>
+
+          {/* Route Map */}
+          <div className="mb-10">
+            <RouteMapSection days={pkg.days} />
+          </div>
 
           <div className="space-y-6">
             {pkg.days.map((day) => (

@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { demoItineraries, getItinerarySlugs } from "@/services";
+import { RouteMapSection } from "@/components/maps/route-map-section";
 
 interface ItineraryDetailPageProps {
   params: Promise<{ slug: string }>;
@@ -125,6 +126,11 @@ export default async function ItineraryDetailPage({
           <h2 className="text-3xl font-bold tracking-tight mb-10">
             Day-by-Day Itinerary
           </h2>
+
+          {/* Route Map */}
+          <div className="mb-10">
+            <RouteMapSection days={itinerary.days} />
+          </div>
 
           <div className="space-y-8">
             {itinerary.days.map((day) => (

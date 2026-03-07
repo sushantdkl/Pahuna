@@ -396,6 +396,8 @@ export const demoItineraries = [
         ],
         meals: "Lunch, Dinner",
         overnight: "Hotel in Birendranagar",
+        latitude: 28.597,
+        longitude: 81.630,
       },
       {
         dayNumber: 2,
@@ -410,6 +412,8 @@ export const demoItineraries = [
         ],
         meals: "Breakfast, Lunch, Dinner",
         overnight: "Hotel in Birendranagar",
+        latitude: 28.585,
+        longitude: 81.648,
       },
       {
         dayNumber: 3,
@@ -424,6 +428,8 @@ export const demoItineraries = [
         ],
         meals: "Breakfast",
         overnight: "N/A",
+        latitude: 28.607,
+        longitude: 81.622,
       },
     ],
   },
@@ -456,6 +462,8 @@ export const demoItineraries = [
         ],
         meals: "Dinner",
         overnight: "Hotel in Birendranagar",
+        latitude: 28.600,
+        longitude: 81.617,
       },
       {
         dayNumber: 2,
@@ -470,6 +478,8 @@ export const demoItineraries = [
         ],
         meals: "Breakfast, Lunch, Dinner",
         overnight: "Hotel in Birendranagar",
+        latitude: 28.585,
+        longitude: 81.648,
       },
       {
         dayNumber: 3,
@@ -484,6 +494,8 @@ export const demoItineraries = [
         ],
         meals: "Breakfast, Lunch, Dinner",
         overnight: "Homestay in Latikoili",
+        latitude: 28.597,
+        longitude: 81.630,
       },
       {
         dayNumber: 4,
@@ -498,6 +510,8 @@ export const demoItineraries = [
         ],
         meals: "Breakfast, Lunch, Dinner",
         overnight: "Homestay",
+        latitude: 28.592,
+        longitude: 81.630,
       },
       {
         dayNumber: 5,
@@ -512,6 +526,8 @@ export const demoItineraries = [
         ],
         meals: "Breakfast, Lunch",
         overnight: "N/A",
+        latitude: 28.615,
+        longitude: 81.610,
       },
     ],
   },

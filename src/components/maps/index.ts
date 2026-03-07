@@ -9,3 +9,5 @@ export { HotelMapSection } from "./hotel-map-section";
 export { HotelsMapSection } from "./hotels-map-section";
 export { ExploreMapSection } from "./explore-map-section";
 export { ExperiencesMapSection } from "./experiences-map-section";
+export { RouteMapSection } from "./route-map-section";
+export { ItinerariesMapSection } from "./itineraries-map-section";

@@ -276,6 +276,10 @@ model Experience {
   
   cityId      String
   city        City     @relation(fields: [cityId], references: [id])
+
+  // Location
+  latitude    Float?
+  longitude   Float?
   
   isFeatured  Boolean  @default(false)
   isActive    Boolean  @default(true)
@@ -338,6 +342,10 @@ model ItineraryDay {
   activities  String[]  // List of activities
   meals       String?   // "Breakfast, Lunch, Dinner"
   overnight   String?   // "Hotel in Birendranagar"
+
+  // Location (day waypoint)
+  latitude    Float?
+  longitude   Float?
   
   itineraryId String
   itinerary   Itinerary @relation(fields: [itineraryId], references: [id], onDelete: Cascade)

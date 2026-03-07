@@ -9,6 +9,7 @@ import { Container } from "@/components/layout/container";
 import { PageHero } from "@/components/shared/page-hero";
 import { EmptyState } from "@/components/shared/empty-state";
 import { demoItineraries } from "@/services";
+import { ItinerariesMapSection } from "@/components/maps/itineraries-map-section";
 
 export const metadata: Metadata = {
   title: "Trip Ideas & Itineraries — Surkhet",
@@ -44,6 +45,9 @@ export default function ItinerariesPage() {
       {/* ── ITINERARIES LIST ── */}
       <section className="py-16">
         <Container>
+          <div className="mb-10">
+            <ItinerariesMapSection itineraries={demoItineraries} />
+          </div>
           {demoItineraries.length > 0 ? (
             <div className="space-y-8">
               {demoItineraries.map((itin) => (
