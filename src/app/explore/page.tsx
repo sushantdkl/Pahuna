@@ -12,7 +12,6 @@ import {
   Plane,
   ArrowRight,
   Camera,
-  Clock,
   Heart,
   Shield,
   Compass,
@@ -23,10 +22,9 @@ import { Badge } from "@/components/ui/badge";
 import { Container } from "@/components/layout/container";
 import { SectionHeader } from "@/components/shared/section-header";
 import { PageHero } from "@/components/shared/page-hero";
-import { EmptyState } from "@/components/shared/empty-state";
 import { surkhetCity, demoDestinations, demoExperiences } from "@/services";
 import { exploreCopy } from "@/data/site-copy";
-import { ExploreMapSection } from "@/components/maps/explore-map-section";
+import { ExploreExplorer } from "@/components/explore/explore-explorer";
 
 export const metadata: Metadata = {
   title: exploreCopy.metadata.title,
@@ -39,10 +37,6 @@ export const metadata: Metadata = {
 };
 
 export default function ExplorePage() {
-  const featuredDestinations = demoDestinations.filter((d) => d.isFeatured);
-  const otherDestinations = demoDestinations.filter((d) => !d.isFeatured);
-  const featuredExperiences = demoExperiences.filter((e) => e.isFeatured);
-
   return (
     <>
       {/* ── HERO ── */}
@@ -138,112 +132,8 @@ export default function ExplorePage() {
         </Container>
       </section>
 
-      {/* ── DESTINATION MAP ── */}
-      <section className="py-14">
-        <Container>
-          <SectionHeader title="Explore the Map" subtitle="Key destinations around the Surkhet Valley" />
-          <ExploreMapSection destinations={demoDestinations} />
-        </Container>
-      </section>
-
-      {/* ── MUST-VISIT DESTINATIONS ── */}
-      <section className="py-20">
-        <Container>
-          <SectionHeader title={exploreCopy.destinations.title} subtitle={exploreCopy.destinations.subtitle} />
-
-          {featuredDestinations.length > 0 ? (
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {featuredDestinations.map((dest) => (
-                <Card key={dest.slug} className="group overflow-hidden border-0 shadow-md hover:shadow-xl transition-all">
-                  <div className="relative aspect-[3/4] overflow-hidden bg-muted">
-                    <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/30 to-transparent z-10" />
-                    <div className="h-full w-full relative transition-transform duration-700 group-hover:scale-110">
-                      <Image
-                        src={dest.coverImage}
-                        alt={dest.name}
-                        fill
-                        sizes="(max-width: 768px) 100vw, 25vw"
-                        className="object-cover"
-                      />
-                    </div>
-                    <div className="absolute top-3 right-3 z-20">
-                      <Badge className="bg-white/90 text-foreground text-xs">{dest.entryFee}</Badge>
-                    </div>
-                    <div className="absolute bottom-4 left-4 right-4 z-20">
-                      <Badge className="bg-white/20 text-white mb-2 text-xs backdrop-blur-sm border-0">{dest.bestSeason}</Badge>
-                      <h3 className="text-lg font-bold text-white leading-tight">{dest.name}</h3>
-                      <p className="text-sm text-white/75 line-clamp-2 mt-1">{dest.shortDesc}</p>
-                    </div>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          ) : (
-            <EmptyState title="No destinations yet" description="We're adding new destinations regularly. Check back soon!" action={{ label: "Go Home", href: "/" }} />
-          )}
-
-          {otherDestinations.length > 0 && (
-            <>
-              <h3 className="text-xl font-semibold mt-14 mb-6">More Places to Explore</h3>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {otherDestinations.map((dest) => (
-                  <Card key={dest.slug} className="overflow-hidden border hover:shadow-lg transition-all group">
-                    <div className="relative aspect-video overflow-hidden bg-muted">
-                      <div className="h-full w-full relative transition-transform duration-500 group-hover:scale-105">
-                        <Image
-                          src={dest.coverImage}
-                          alt={dest.name}
-                          fill
-                          sizes="(max-width: 768px) 100vw, 33vw"
-                          className="object-cover"
-                        />
-                      </div>
-                      <Badge className="absolute top-3 left-3 bg-white/90 text-foreground text-xs">{dest.entryFee}</Badge>
-                    </div>
-                    <CardContent className="p-5">
-                      <h3 className="text-lg font-bold mb-2 group-hover:text-primary transition-colors">{dest.name}</h3>
-                      <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{dest.shortDesc}</p>
-                      <div className="flex items-center text-xs text-muted-foreground">
-                        <Clock className="h-3 w-3 mr-1" /> Best: {dest.bestSeason}
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </>
-          )}
-        </Container>
-      </section>
-
-      {/* ── THINGS TO DO PREVIEW ── */}
-      <section className="py-20 bg-muted/30">
-        <Container>
-          <SectionHeader title={exploreCopy.experiences.title} subtitle={exploreCopy.experiences.subtitle} action={{ label: exploreCopy.experiences.cta.label, href: exploreCopy.experiences.cta.href }} />
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {featuredExperiences.map((exp) => (
-              <Card key={exp.slug} className="group overflow-hidden border hover:shadow-lg transition-all">
-                <div className="relative aspect-video overflow-hidden bg-muted">
-                  <div className="h-full w-full relative transition-transform duration-500 group-hover:scale-105">
-                    <Image
-                      src={exp.coverImage}
-                      alt={exp.title}
-                      fill
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                      className="object-cover"
-                    />
-                  </div>
-                  <Badge className="absolute top-3 left-3 bg-white/90 text-foreground text-xs">{exp.category}</Badge>
-                </div>
-                <CardContent className="p-4">
-                  <h4 className="font-semibold leading-tight mb-1 group-hover:text-primary transition-colors">{exp.title}</h4>
-                  <p className="text-sm text-muted-foreground line-clamp-2 mb-2">{exp.shortDesc}</p>
-                  <div className="text-xs text-muted-foreground">{exp.duration} · {exp.priceRange}</div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </Container>
-      </section>
+      {/* ── EXPLORE DESTINATIONS & EXPERIENCES ── */}
+      <ExploreExplorer destinations={demoDestinations} experiences={demoExperiences} />
 
       {/* ── HOW TO GET THERE ── */}
       <section className="py-20">

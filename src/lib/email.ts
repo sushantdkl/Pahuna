@@ -1,8 +1,30 @@
 // =============================================================================
-// Email service hooks — confirmation-ready email layer
-// Phase 1: logs emails & returns structured payloads
-// Phase 2: integrate with Resend, SendGrid, or Nodemailer
+// Email service — Resend-backed transactional email layer
+// Provides: sendEmail, sendEmails, 7 template builders
+// Swap provider: replace the `deliverEmail` function only
 // =============================================================================
+
+import { Resend } from "resend";
+
+// ── Config ──────────────────────────────────────────────────────────────────
+
+const RESEND_API_KEY = process.env.RESEND_API_KEY ?? "";
+const EMAIL_FROM = process.env.EMAIL_FROM ?? "Pahuna <noreply@pahuna.com>";
+const EMAIL_REPLY_TO = process.env.EMAIL_REPLY_TO ?? "hello@pahuna.com";
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? "hello@pahuna.com";
+
+/** Lazily initialized Resend client — only created when an API key exists */
+let resendClient: Resend | null = null;
+
+function getResend(): Resend | null {
+  if (!RESEND_API_KEY) return null;
+  if (!resendClient) {
+    resendClient = new Resend(RESEND_API_KEY);
+  }
+  return resendClient;
+}
+
+// ── Types ───────────────────────────────────────────────────────────────────
 
 export interface EmailPayload {
   to: string;
@@ -12,28 +34,80 @@ export interface EmailPayload {
   metadata?: Record<string, string>;
 }
 
-/**
- * Send a transactional email. Currently logs to console.
- * Replace with Resend / SendGrid / AWS SES in production.
- */
-export async function sendEmail(payload: EmailPayload): Promise<{ success: boolean }> {
-  try {
-    // Phase 2: replace with actual provider
-    // import { Resend } from "resend";
-    // const resend = new Resend(process.env.RESEND_API_KEY);
-    // await resend.emails.send({ from: "noreply@surkhethotel.com", ...payload });
+export interface EmailResult {
+  success: boolean;
+  /** Resend message ID on success */
+  messageId?: string;
+  error?: string;
+}
 
-    console.log("📧 Email queued:", {
+// ── Core send function ──────────────────────────────────────────────────────
+
+/**
+ * Send a transactional email via Resend.
+ * Falls back to console logging when no API key is configured (dev/CI).
+ * Never throws — always returns a structured result.
+ */
+export async function sendEmail(payload: EmailPayload): Promise<EmailResult> {
+  try {
+    const resend = getResend();
+
+    if (!resend) {
+      // Dev / CI fallback — log instead of sending
+      console.log("[email:dev]", {
+        to: payload.to,
+        subject: payload.subject,
+        bodyLength: payload.body.length,
+      });
+      return { success: true, messageId: "dev-mode" };
+    }
+
+    const { data, error } = await resend.emails.send({
+      from: EMAIL_FROM,
       to: payload.to,
       subject: payload.subject,
-      bodyLength: payload.body.length,
+      text: payload.body,
+      replyTo: payload.replyTo ?? EMAIL_REPLY_TO,
+      tags: payload.metadata
+        ? Object.entries(payload.metadata).map(([name, value]) => ({
+            name,
+            value,
+          }))
+        : undefined,
     });
 
-    return { success: true };
-  } catch (error) {
-    console.error("Email send error:", error);
-    return { success: false };
+    if (error) {
+      console.error("[email:error]", error);
+      return { success: false, error: error.message };
+    }
+
+    return { success: true, messageId: data?.id };
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Unknown email error";
+    console.error("[email:error]", message);
+    return { success: false, error: message };
   }
+}
+
+/**
+ * Send user acknowledgment + admin notification in parallel.
+ * Both are fire-and-forget — failures are logged but never bubble up.
+ */
+export async function sendEmails(
+  userEmail: EmailPayload,
+  adminDetails: {
+    type: string;
+    name: string;
+    email: string;
+    details: string;
+  },
+): Promise<void> {
+  const adminEmail = buildAdminNotificationEmail(adminDetails);
+
+  await Promise.allSettled([
+    sendEmail(userEmail),
+    sendEmail(adminEmail),
+  ]);
 }
 
 // ── Pre-built email templates ──
@@ -192,6 +266,27 @@ Pahuna Training Academy
   };
 }
 
+export function buildContactConfirmationEmail(data: {
+  fullName: string;
+  email: string;
+  subject?: string;
+}): EmailPayload {
+  return {
+    to: data.email,
+    subject: "Message Received — Pahuna",
+    body: `
+Hi ${data.fullName},
+
+Thank you for reaching out${data.subject ? ` about "${data.subject}"` : ""}. We've received your message and will respond within 24 hours.
+
+If you need immediate assistance, call us at +977-083-520000.
+
+Best regards,
+Pahuna Team — Surkhet, Nepal
+    `.trim(),
+  };
+}
+
 export function buildAdminNotificationEmail(data: {
   type: string;
   name: string;
@@ -199,7 +294,7 @@ export function buildAdminNotificationEmail(data: {
   details: string;
 }): EmailPayload {
   return {
-    to: "hello@surkhethotel.com",
+    to: ADMIN_EMAIL,
     subject: `New ${data.type}: ${data.name}`,
     replyTo: data.email,
     body: `
@@ -210,7 +305,7 @@ Email: ${data.email}
 
 ${data.details}
 
-— Automated notification from surkhethotel.com
+— Automated notification from pahuna.com
     `.trim(),
   };
 }

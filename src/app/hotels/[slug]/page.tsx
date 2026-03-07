@@ -23,9 +23,11 @@ import { SectionHeader } from "@/components/shared/section-header";
 import { HotelCard } from "@/components/hotels/hotel-card";
 import { InquiryForm } from "@/components/forms/inquiry-form";
 import { CallbackForm } from "@/components/forms/callback-form";
-import { demoHotels, getHotelSlugs } from "@/services";
+import { demoHotels, getHotelSlugs, demoDestinations, demoExperiences } from "@/services";
 import { formatPrice } from "@/lib/utils";
-import { HotelMapSection } from "@/components/maps/hotel-map-section";
+import { HotelDetailMap } from "@/components/maps/hotel-detail-map";
+import { findNearbyPlaces } from "@/lib/geo-utils";
+import type { MarkerCategory } from "@/components/maps/map-constants";
 
 interface HotelDetailPageProps {
   params: Promise<{ slug: string }>;
@@ -59,6 +61,33 @@ export default async function HotelDetailPage({
   if (!hotel) notFound();
 
   const relatedHotels = demoHotels.filter((h) => h.slug !== slug).slice(0, 3);
+
+  // Compute nearby attractions + experiences
+  const nearbyPlaces =
+    hotel.latitude && hotel.longitude
+      ? findNearbyPlaces(hotel.latitude, hotel.longitude, [
+          ...demoDestinations.map((d) => ({
+            name: d.name,
+            slug: d.slug,
+            latitude: d.latitude,
+            longitude: d.longitude,
+            category: "destination" as const,
+            coverImage: d.coverImage,
+            subtitle: d.bestSeason ? `Best: ${d.bestSeason}` : undefined,
+            href: `/explore#${d.slug}`,
+          })),
+          ...demoExperiences.map((e) => ({
+            name: e.title,
+            slug: e.slug,
+            latitude: e.latitude,
+            longitude: e.longitude,
+            category: "experience" as const,
+            coverImage: e.coverImage,
+            subtitle: e.category,
+            href: `/experiences#${e.slug}`,
+          })),
+        ]).map((p) => ({ ...p, category: p.category as MarkerCategory }))
+      : [];
 
   return (
     <>
@@ -231,15 +260,18 @@ export default async function HotelDetailPage({
                 </div>
               </div>
 
-              {/* Location Map */}
+              {/* Location Map + Nearby */}
               {hotel.latitude && hotel.longitude && (
                 <div>
-                  <h2 className="text-xl font-semibold mb-4">Location</h2>
-                  <HotelMapSection
+                  <h2 className="text-xl font-semibold mb-4">
+                    Location{nearbyPlaces.length > 0 ? " & Nearby" : ""}
+                  </h2>
+                  <HotelDetailMap
                     lat={hotel.latitude}
                     lng={hotel.longitude}
                     name={hotel.name}
                     address={hotel.address}
+                    nearbyPlaces={nearbyPlaces}
                   />
                 </div>
               )}

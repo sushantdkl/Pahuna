@@ -15,6 +15,8 @@ import {
   MessageSquare,
   Handshake,
   Settings,
+  Mail,
+  MapPin,
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -64,10 +66,22 @@ const navItems: SidebarItem[] = [
     section: "leads",
   },
   {
+    label: "Messages",
+    href: "/dashboard/messages",
+    icon: Mail,
+    section: "messages",
+  },
+  {
     label: "Partners",
     href: "/dashboard/partners",
     icon: Handshake,
     section: "partners",
+  },
+  {
+    label: "Locations",
+    href: "/dashboard/locations",
+    icon: MapPin,
+    section: "locations",
   },
   {
     label: "Users",

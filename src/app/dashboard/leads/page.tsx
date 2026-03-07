@@ -1,36 +1,45 @@
 import { requireRole } from "@/lib/auth-helpers";
 import { db } from "@/lib/db";
 import { StatCard } from "@/components/dashboard/stat-card";
-import {
-  DataTableCard,
-  StatusBadge,
-} from "@/components/dashboard/data-table-card";
-import { MessageSquare, Briefcase, Hotel } from "lucide-react";
+import { MessageSquare, Briefcase, Phone, AlertCircle } from "lucide-react";
+import { LeadsContent } from "./leads-content";
 import { format } from "date-fns";
 
 export default async function DashboardLeadsPage() {
   await requireRole(["ADMIN", "HOTEL_PARTNER", "CONSULTING_MANAGER"]);
 
-  const [inquiryCount, consultingLeadCount, recentInquiries, recentLeads] =
-    await Promise.all([
-      db.inquiry.count(),
-      db.consultingLead.count(),
-      db.inquiry.findMany({
-        take: 8,
-        orderBy: { createdAt: "desc" },
-        include: { hotel: { select: { name: true } } },
-      }),
-      db.consultingLead.findMany({
-        take: 8,
-        orderBy: { createdAt: "desc" },
-      }),
-    ]);
+  const [
+    inquiryCount,
+    newInquiryCount,
+    callbackCount,
+    consultingLeadCount,
+    newConsultingLeadCount,
+    recentInquiries,
+    recentLeads,
+  ] = await Promise.all([
+    db.inquiry.count({ where: { type: { not: "CALLBACK_REQUEST" } } }),
+    db.inquiry.count({ where: { status: "NEW", type: { not: "CALLBACK_REQUEST" } } }),
+    db.inquiry.count({ where: { type: "CALLBACK_REQUEST" } }),
+    db.consultingLead.count(),
+    db.consultingLead.count({ where: { status: "NEW" } }),
+    db.inquiry.findMany({
+      take: 25,
+      orderBy: { createdAt: "desc" },
+      include: { hotel: { select: { name: true } } },
+    }),
+    db.consultingLead.findMany({
+      take: 25,
+      orderBy: { createdAt: "desc" },
+    }),
+  ]);
 
   const inquiryRows = recentInquiries.map((i) => ({
     id: i.id,
     fullName: i.fullName,
     email: i.email,
+    phone: i.phone ?? "—",
     hotel: i.hotel?.name ?? "General",
+    type: i.type,
     status: i.status,
     date: format(i.createdAt, "MMM d, yyyy"),
   }));
@@ -39,6 +48,8 @@ export default async function DashboardLeadsPage() {
     id: l.id,
     contactName: l.contactName,
     businessName: l.businessName,
+    email: l.email,
+    phone: l.phone ?? "—",
     service: l.serviceType,
     status: l.status,
     date: format(l.createdAt, "MMM d, yyyy"),
@@ -47,58 +58,45 @@ export default async function DashboardLeadsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Leads</h1>
+        <h1 className="text-2xl font-bold tracking-tight">Leads & Inquiries</h1>
         <p className="text-sm text-muted-foreground">
-          Hotel inquiries and consulting leads
+          Hotel inquiries, callback requests, and consulting leads
         </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
           title="Hotel Inquiries"
           value={inquiryCount}
-          icon={Hotel}
+          subtitle={newInquiryCount > 0 ? `${newInquiryCount} new` : "All handled"}
+          icon={MessageSquare}
+        />
+        <StatCard
+          title="Callback Requests"
+          value={callbackCount}
+          subtitle="Awaiting calls"
+          icon={Phone}
         />
         <StatCard
           title="Consulting Leads"
           value={consultingLeadCount}
+          subtitle={newConsultingLeadCount > 0 ? `${newConsultingLeadCount} new` : "All handled"}
           icon={Briefcase}
         />
-      </div>
-
-      <div className="grid gap-6 lg:grid-cols-2">
-        <DataTableCard
-          title="Hotel Inquiries"
-          data={inquiryRows}
-          emptyMessage="No inquiries yet"
-          columns={[
-            { header: "Guest", accessorKey: "fullName" },
-            { header: "Hotel", accessorKey: "hotel" },
-            {
-              header: "Status",
-              accessorKey: "status",
-              cell: (val) => <StatusBadge status={String(val)} />,
-            },
-            { header: "Date", accessorKey: "date", className: "hidden sm:table-cell" },
-          ]}
-        />
-
-        <DataTableCard
-          title="Consulting Leads"
-          data={leadRows}
-          emptyMessage="No consulting leads yet"
-          columns={[
-            { header: "Contact", accessorKey: "contactName" },
-            { header: "Business", accessorKey: "businessName", className: "hidden sm:table-cell" },
-            {
-              header: "Status",
-              accessorKey: "status",
-              cell: (val) => <StatusBadge status={String(val)} />,
-            },
-            { header: "Date", accessorKey: "date", className: "hidden sm:table-cell" },
-          ]}
+        <StatCard
+          title="Needs Attention"
+          value={newInquiryCount + newConsultingLeadCount}
+          subtitle="New & uncontacted"
+          icon={AlertCircle}
         />
       </div>
+
+      <LeadsContent
+        inquiries={inquiryRows}
+        consultingLeads={leadRows}
+        totalInquiries={inquiryCount + callbackCount}
+        totalLeads={consultingLeadCount}
+      />
     </div>
   );
 }

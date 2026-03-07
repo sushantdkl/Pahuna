@@ -62,7 +62,7 @@ export function RouteMapSection({ days, className }: RouteMapSectionProps) {
       <PahunaMap
         center={{ lat: avgLat, lng: avgLng }}
         zoom={ZOOM.city}
-        className={className ?? "w-full h-[350px] rounded-xl overflow-hidden"}
+        className={className ?? "w-full h-[280px] md:h-[350px] rounded-xl overflow-hidden"}
         fallbackLabel="Trip Route — Surkhet"
       >
         <RoutePolyline path={path} />
@@ -73,6 +73,8 @@ export function RouteMapSection({ days, className }: RouteMapSectionProps) {
             key={day.dayNumber}
             position={{ lat: day.latitude!, lng: day.longitude! }}
             title={`Day ${day.dayNumber}: ${day.title}`}
+            category="itinerary"
+            label={day.dayNumber}
           >
             <div className="p-2 min-w-[160px]">
               <p className="text-xs text-slate-500 font-medium">Day {day.dayNumber}</p>

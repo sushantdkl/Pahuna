@@ -1,23 +1,22 @@
 import { requireRole } from "@/lib/auth-helpers";
 import { db } from "@/lib/db";
 import { StatCard } from "@/components/dashboard/stat-card";
-import {
-  DataTableCard,
-  StatusBadge,
-} from "@/components/dashboard/data-table-card";
-import { Hotel, MessageSquare, Star } from "lucide-react";
+import { Hotel, MessageSquare, Star, MapPin } from "lucide-react";
 import { format } from "date-fns";
+import { HotelsContent } from "./hotels-content";
 
 export default async function DashboardHotelsPage() {
   await requireRole(["ADMIN", "EDITOR", "HOTEL_PARTNER"]);
 
-  const [hotelCount, activeCount, inquiryCount, recentInquiries] =
+  const [hotelCount, activeCount, inquiryCount, newInquiryCount, hotelsWithCoords, recentInquiries] =
     await Promise.all([
       db.hotel.count(),
       db.hotel.count({ where: { status: "PUBLISHED" } }),
       db.inquiry.count(),
+      db.inquiry.count({ where: { status: "NEW" } }),
+      db.hotel.count({ where: { latitude: { not: null }, longitude: { not: null } } }),
       db.inquiry.findMany({
-        take: 10,
+        take: 30,
         orderBy: { createdAt: "desc" },
         include: { hotel: { select: { name: true } } },
       }),
@@ -27,7 +26,9 @@ export default async function DashboardHotelsPage() {
     id: i.id,
     fullName: i.fullName,
     email: i.email,
+    phone: i.phone ?? "—",
     hotel: i.hotel?.name ?? "General",
+    type: i.type,
     status: i.status,
     date: format(i.createdAt, "MMM d, yyyy"),
   }));
@@ -41,33 +42,24 @@ export default async function DashboardHotelsPage() {
         </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-4">
         <StatCard title="Total Hotels" value={hotelCount} icon={Hotel} />
         <StatCard title="Active Listings" value={activeCount} icon={Star} />
         <StatCard
           title="Inquiries"
           value={inquiryCount}
+          subtitle={newInquiryCount > 0 ? `${newInquiryCount} new` : undefined}
           icon={MessageSquare}
+        />
+        <StatCard
+          title="Map Coverage"
+          value={`${hotelCount > 0 ? Math.round((hotelsWithCoords / hotelCount) * 100) : 0}%`}
+          subtitle={`${hotelsWithCoords}/${hotelCount} have coordinates`}
+          icon={MapPin}
         />
       </div>
 
-      <DataTableCard
-        title="Hotel Inquiries"
-        description="All hotel booking and general inquiries"
-        data={rows}
-        emptyMessage="No inquiries yet"
-        columns={[
-          { header: "Guest", accessorKey: "fullName" },
-          { header: "Email", accessorKey: "email", className: "hidden md:table-cell" },
-          { header: "Hotel", accessorKey: "hotel" },
-          {
-            header: "Status",
-            accessorKey: "status",
-            cell: (val) => <StatusBadge status={String(val)} />,
-          },
-          { header: "Date", accessorKey: "date", className: "hidden sm:table-cell" },
-        ]}
-      />
+      <HotelsContent inquiries={rows} totalCount={inquiryCount} />
     </div>
   );
 }

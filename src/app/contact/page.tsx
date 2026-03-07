@@ -100,6 +100,10 @@ export default function ContactPage() {
       {/* Map Section */}
       <section className="py-20">
         <Container>
+          <SectionHeader
+            title="Our Location"
+            subtitle="Visit us at our office in Birendranagar, Surkhet"
+          />
           <ContactMapSection />
         </Container>
       </section>

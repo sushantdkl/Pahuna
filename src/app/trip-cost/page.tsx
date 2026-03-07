@@ -7,6 +7,9 @@ import { SectionHeader } from "@/components/shared/section-header";
 import { Button } from "@/components/ui/button";
 import { BudgetEstimator } from "@/components/tourism/budget-estimator";
 import { TransportTable } from "@/components/tourism/transport-table";
+import { TripCostMapSection } from "@/components/trip-cost/trip-cost-map-section";
+import { demoHotels, demoDestinations, demoExperiences } from "@/services";
+import type { MarkerCategory } from "@/components/maps/map-constants";
 
 export const metadata: Metadata = {
   title: "Trip Cost Estimator — Plan Your Surkhet Budget",
@@ -20,6 +23,42 @@ export const metadata: Metadata = {
 };
 
 export default function TripCostPage() {
+  const hotelPlaces = demoHotels.map((h) => ({
+    name: h.name,
+    slug: h.slug,
+    latitude: h.latitude,
+    longitude: h.longitude,
+    coverImage: h.images?.[0],
+    category: "hotel" as MarkerCategory,
+    costHint: `NPR ${h.priceMin.toLocaleString()} – ${h.priceMax.toLocaleString()}/night`,
+    subtitle: h.propertyType,
+    href: `/hotels/${h.slug}`,
+  }));
+
+  const destPlaces = demoDestinations.map((d) => ({
+    name: d.name,
+    slug: d.slug,
+    latitude: d.latitude,
+    longitude: d.longitude,
+    coverImage: d.coverImage,
+    category: ((d as { category?: string }).category ?? "destination") as MarkerCategory,
+    costHint: d.entryFee === "Free" ? "Free entry" : `Entry: ${d.entryFee}`,
+    subtitle: d.bestSeason,
+    href: `/explore#${d.slug}`,
+  }));
+
+  const expPlaces = demoExperiences.map((e) => ({
+    name: e.title,
+    slug: e.slug,
+    latitude: e.latitude,
+    longitude: e.longitude,
+    coverImage: e.coverImage,
+    category: "experience" as MarkerCategory,
+    costHint: e.priceRange,
+    subtitle: e.duration,
+    href: `/experiences#${e.slug}`,
+  }));
+
   return (
     <>
       {/* ── HERO ── */}
@@ -70,6 +109,21 @@ export default function TripCostPage() {
             subtitle="How to get to Surkhet and how to get around once you're there"
           />
           <TransportTable />
+        </Container>
+      </section>
+
+      {/* ── LOCATION MAP ── */}
+      <section className="py-16">
+        <Container>
+          <SectionHeader
+            title="Where Things Are"
+            subtitle="Explore hotels, attractions, and experiences on the map — tap any place to see costs and distances"
+          />
+          <TripCostMapSection
+            hotels={hotelPlaces}
+            destinations={destPlaces}
+            experiences={expPlaces}
+          />
         </Container>
       </section>
 

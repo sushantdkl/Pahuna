@@ -1,23 +1,21 @@
 import { requireRole } from "@/lib/auth-helpers";
 import { db } from "@/lib/db";
 import { StatCard } from "@/components/dashboard/stat-card";
-import {
-  DataTableCard,
-  StatusBadge,
-} from "@/components/dashboard/data-table-card";
-import { Handshake, Clock, CheckCircle } from "lucide-react";
+import { Handshake, Clock, CheckCircle, XCircle } from "lucide-react";
 import { format } from "date-fns";
+import { PartnersContent } from "./partners-content";
 
 export default async function DashboardPartnersPage() {
   await requireRole(["ADMIN"]);
 
-  const [totalCount, pendingCount, approvedCount, recentApplications] =
+  const [totalCount, pendingCount, approvedCount, rejectedCount, recentApplications] =
     await Promise.all([
       db.partnerApplication.count(),
       db.partnerApplication.count({ where: { status: "PENDING" } }),
       db.partnerApplication.count({ where: { status: "APPROVED" } }),
+      db.partnerApplication.count({ where: { status: "REJECTED" } }),
       db.partnerApplication.findMany({
-        take: 10,
+        take: 30,
         orderBy: { createdAt: "desc" },
       }),
     ]);
@@ -27,6 +25,7 @@ export default async function DashboardPartnersPage() {
     businessName: a.businessName,
     ownerName: a.ownerName,
     email: a.email,
+    phone: a.phone ?? "—",
     type: a.partnerType,
     status: a.status,
     date: format(a.createdAt, "MMM d, yyyy"),
@@ -41,7 +40,7 @@ export default async function DashboardPartnersPage() {
         </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-4">
         <StatCard
           title="Total Applications"
           value={totalCount}
@@ -50,6 +49,7 @@ export default async function DashboardPartnersPage() {
         <StatCard
           title="Pending Review"
           value={pendingCount}
+          subtitle="Needs action"
           icon={Clock}
         />
         <StatCard
@@ -57,25 +57,14 @@ export default async function DashboardPartnersPage() {
           value={approvedCount}
           icon={CheckCircle}
         />
+        <StatCard
+          title="Rejected"
+          value={rejectedCount}
+          icon={XCircle}
+        />
       </div>
 
-      <DataTableCard
-        title="Partner Applications"
-        description="All partnership requests"
-        data={rows}
-        emptyMessage="No applications yet"
-        columns={[
-          { header: "Business", accessorKey: "businessName" },
-          { header: "Owner", accessorKey: "ownerName", className: "hidden sm:table-cell" },
-          { header: "Type", accessorKey: "type" },
-          {
-            header: "Status",
-            accessorKey: "status",
-            cell: (val) => <StatusBadge status={String(val)} />,
-          },
-          { header: "Date", accessorKey: "date", className: "hidden md:table-cell" },
-        ]}
-      />
+      <PartnersContent applications={rows} totalCount={totalCount} />
     </div>
   );
 }

@@ -25,10 +25,10 @@ export function HotelMapSection({ lat, lng, name, address }: HotelMapSectionProp
         <PahunaMap
           center={position}
           zoom={ZOOM.detail}
-          className="w-full h-[300px] rounded-xl overflow-hidden"
+          className="w-full h-[250px] md:h-[300px] rounded-xl overflow-hidden"
           fallbackLabel={address ?? name}
         >
-          <PahunaMarker position={position} title={name}>
+          <PahunaMarker position={position} title={name} category="hotel">
             <div className="p-2">
               <p className="font-semibold text-sm">{name}</p>
               {address && <p className="text-xs text-slate-500">{address}</p>}

@@ -5,10 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Container } from "@/components/layout/container";
 import { PageHero } from "@/components/shared/page-hero";
 import { NewsletterForm } from "@/components/forms/newsletter-form";
-import { HotelListingClient } from "@/components/hotels/hotel-listing-client";
+import { HotelsExplorer } from "@/components/hotels/hotels-explorer";
 import { demoHotels } from "@/services";
 import { hotelsCopy } from "@/data/site-copy";
-import { HotelsMapSection } from "@/components/maps/hotels-map-section";
 
 export const metadata: Metadata = {
   title: hotelsCopy.metadata.title,
@@ -31,13 +30,10 @@ export default function HotelsPage() {
         subtitle={hotelsCopy.hero.subtitle}
       />
 
-      {/* ── LISTING + FILTERS ── */}
+      {/* ── LISTING + MAP EXPLORER ── */}
       <section className="py-14">
         <Container>
-          <HotelsMapSection hotels={demoHotels} />
-          <div className="mt-8">
-            <HotelListingClient hotels={demoHotels} />
-          </div>
+          <HotelsExplorer hotels={demoHotels} />
         </Container>
       </section>
 

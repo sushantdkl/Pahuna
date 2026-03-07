@@ -1,15 +1,12 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
-import { ArrowRight, Clock, DollarSign, Users, Mountain, Map, Compass } from "lucide-react";
+import { ArrowRight, DollarSign, Map, Compass } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Container } from "@/components/layout/container";
 import { PageHero } from "@/components/shared/page-hero";
 import { EmptyState } from "@/components/shared/empty-state";
 import { demoItineraries } from "@/services";
-import { ItinerariesMapSection } from "@/components/maps/itineraries-map-section";
+import { ItinerariesExplorer } from "@/components/itineraries/itineraries-explorer";
 
 export const metadata: Metadata = {
   title: "Trip Ideas & Itineraries — Surkhet",
@@ -42,74 +39,11 @@ export default function ItinerariesPage() {
         </div>
       </PageHero>
 
-      {/* ── ITINERARIES LIST ── */}
+      {/* ── ITINERARIES EXPLORER ── */}
       <section className="py-16">
         <Container>
-          <div className="mb-10">
-            <ItinerariesMapSection itineraries={demoItineraries} />
-          </div>
           {demoItineraries.length > 0 ? (
-            <div className="space-y-8">
-              {demoItineraries.map((itin) => (
-                <Card key={itin.slug} className="overflow-hidden border hover:shadow-lg transition-all">
-                  <div className="grid md:grid-cols-3">
-                    <div className="md:col-span-1 relative aspect-video md:aspect-auto overflow-hidden bg-muted min-h-[250px]">
-                      <Image
-                        src={itin.coverImage}
-                        alt={itin.title}
-                        fill
-                        sizes="(max-width: 768px) 100vw, 33vw"
-                        className="object-cover"
-                      />
-                      {itin.isFeatured && (
-                        <Badge className="absolute top-3 left-3 bg-primary text-primary-foreground">Popular</Badge>
-                      )}
-                    </div>
-                    <CardContent className="md:col-span-2 p-8">
-                      <div className="flex flex-wrap items-center gap-3 mb-4">
-                        <Badge variant="outline">{itin.duration}</Badge>
-                        <Badge variant="outline">{itin.difficulty}</Badge>
-                      </div>
-                      <h2 className="text-2xl font-bold mb-3">{itin.title}</h2>
-                      <p className="text-muted-foreground mb-6">{itin.shortDesc}</p>
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-                        <div className="flex items-center gap-2 text-sm">
-                          <Clock className="h-4 w-4 text-primary" />
-                          <div>
-                            <div className="text-xs text-muted-foreground">Duration</div>
-                            <div className="font-medium">{itin.totalDays} Days</div>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2 text-sm">
-                          <DollarSign className="h-4 w-4 text-primary" />
-                          <div>
-                            <div className="text-xs text-muted-foreground">Est. Cost</div>
-                            <div className="font-medium">{itin.estimatedCost}</div>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2 text-sm">
-                          <Users className="h-4 w-4 text-primary" />
-                          <div>
-                            <div className="text-xs text-muted-foreground">Group Size</div>
-                            <div className="font-medium">{itin.groupSize}</div>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2 text-sm">
-                          <Mountain className="h-4 w-4 text-primary" />
-                          <div>
-                            <div className="text-xs text-muted-foreground">Best Season</div>
-                            <div className="font-medium">{itin.bestSeason}</div>
-                          </div>
-                        </div>
-                      </div>
-                      <Button asChild>
-                        <Link href={`/itineraries/${itin.slug}`}>View Day-by-Day Plan <ArrowRight className="h-4 w-4 ml-2" /></Link>
-                      </Button>
-                    </CardContent>
-                  </div>
-                </Card>
-              ))}
-            </div>
+            <ItinerariesExplorer itineraries={demoItineraries} />
           ) : (
             <EmptyState
               icon={<Compass className="h-14 w-14" />}

@@ -32,7 +32,7 @@ export function ExploreMapSection({ destinations }: ExploreMapSectionProps) {
       <PahunaMap
         center={SURKHET_CENTER}
         zoom={ZOOM.city}
-        className="w-full h-[400px] rounded-xl overflow-hidden"
+        className="w-full h-[300px] md:h-[400px] rounded-xl overflow-hidden"
         fallbackLabel="Explore Surkhet Valley"
       >
         {mappable.map((dest) => (
@@ -40,12 +40,14 @@ export function ExploreMapSection({ destinations }: ExploreMapSectionProps) {
             key={dest.slug}
             position={{ lat: dest.latitude!, lng: dest.longitude! }}
             title={dest.name}
+            category="destination"
           >
             <PahunaInfoCard
               name={dest.name}
               href={`/explore#${dest.slug}`}
               image={dest.coverImage}
               subtitle={dest.bestSeason ? `Best: ${dest.bestSeason}` : undefined}
+              category="destination"
             />
           </PahunaMarker>
         ))}

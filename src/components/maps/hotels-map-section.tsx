@@ -33,7 +33,7 @@ export function HotelsMapSection({ hotels }: HotelsMapSectionProps) {
       <PahunaMap
         center={SURKHET_CENTER}
         zoom={ZOOM.area}
-        className="w-full h-[400px] rounded-xl overflow-hidden"
+        className="w-full h-[300px] md:h-[400px] rounded-xl overflow-hidden"
         fallbackLabel="Hotels in Surkhet"
       >
         {mappableHotels.map((hotel) => (
@@ -41,6 +41,7 @@ export function HotelsMapSection({ hotels }: HotelsMapSectionProps) {
             key={hotel.slug}
             position={{ lat: hotel.latitude!, lng: hotel.longitude! }}
             title={hotel.name}
+            category="hotel"
           >
             <PahunaInfoCard
               name={hotel.name}
@@ -48,6 +49,7 @@ export function HotelsMapSection({ hotels }: HotelsMapSectionProps) {
               image={hotel.images?.[0]}
               subtitle={hotel.propertyType}
               rating={hotel.starRating}
+              category="hotel"
             />
           </PahunaMarker>
         ))}

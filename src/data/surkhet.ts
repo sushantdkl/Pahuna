@@ -209,6 +209,7 @@ export const demoDestinations = [
   {
     name: "Bulbule Tal (Bulbule Lake)",
     slug: "bulbule-tal",
+    category: "lake" as const,
     shortDesc:
       "A serene lake surrounded by hills, perfect for morning walks and picnics.",
     description:
@@ -223,6 +224,7 @@ export const demoDestinations = [
   {
     name: "Deuti Bajai Temple",
     slug: "deuti-bajai-temple",
+    category: "temple" as const,
     shortDesc:
       "An ancient Hindu temple dedicated to the local goddess, rich in cultural significance.",
     description:
@@ -237,6 +239,7 @@ export const demoDestinations = [
   {
     name: "Kakre Bihar",
     slug: "kakre-bihar",
+    category: "destination" as const,
     shortDesc:
       "Ancient Buddhist monastery ruins dating back to the Licchavi period.",
     description:
@@ -251,6 +254,7 @@ export const demoDestinations = [
   {
     name: "Kankre Bihar Cave",
     slug: "kankre-bihar-cave",
+    category: "destination" as const,
     shortDesc:
       "Natural limestone caves with historical significance and adventure appeal.",
     description:
@@ -265,6 +269,7 @@ export const demoDestinations = [
   {
     name: "Surkhet Valley Viewpoint",
     slug: "surkhet-valley-viewpoint",
+    category: "destination" as const,
     shortDesc:
       "Panoramic viewpoint overlooking the entire Surkhet valley and surrounding hills.",
     description:

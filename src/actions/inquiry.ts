@@ -3,9 +3,8 @@
 import { db } from "@/lib/db";
 import { inquirySchema, type InquiryInput } from "@/lib/validations";
 import {
-  sendEmail,
+  sendEmails,
   buildInquiryConfirmationEmail,
-  buildAdminNotificationEmail,
 } from "@/lib/email";
 import type { ActionResult } from "@/lib/types/actions";
 
@@ -35,20 +34,16 @@ export async function submitInquiry(data: InquiryInput): Promise<ActionResult<{ 
       },
     });
 
-    // Send confirmation email to user (non-blocking)
+    // Send user confirmation + admin notification (non-blocking)
     const confirmationEmail = buildInquiryConfirmationEmail({
       fullName,
       hotelName,
       checkIn,
       checkOut,
     });
-    await sendEmail({ ...confirmationEmail, to: email }).catch((e) =>
-      console.error("Confirmation email failed:", e)
-    );
-
-    // Notify admin (non-blocking)
-    await sendEmail(
-      buildAdminNotificationEmail({
+    sendEmails(
+      { ...confirmationEmail, to: email },
+      {
         type: type === "HOTEL_BOOKING" ? "Hotel Booking Inquiry" : "General Inquiry",
         name: fullName,
         email,
@@ -61,8 +56,8 @@ export async function submitInquiry(data: InquiryInput): Promise<ActionResult<{ 
         ]
           .filter(Boolean)
           .join("\n"),
-      })
-    ).catch((e) => console.error("Admin notification failed:", e));
+      },
+    );
 
     return { success: true, data: { inquiryId: inquiry.id } };
   } catch (error) {

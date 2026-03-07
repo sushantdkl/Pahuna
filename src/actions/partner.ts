@@ -3,9 +3,8 @@
 import { db } from "@/lib/db";
 import { partnerSchema, type PartnerInput } from "@/lib/validations";
 import {
-  sendEmail,
+  sendEmails,
   buildPartnerConfirmationEmail,
-  buildAdminNotificationEmail,
 } from "@/lib/email";
 import type { ActionResult } from "@/lib/types/actions";
 
@@ -36,25 +35,19 @@ export async function submitPartnerApplication(data: PartnerInput): Promise<Acti
       },
     });
 
-    // Send confirmation (non-blocking)
+    // Send user confirmation + admin notification (non-blocking)
     const confirmEmail = buildPartnerConfirmationEmail({
       ownerName: d.ownerName,
       businessName: d.businessName,
     });
-    sendEmail({ ...confirmEmail, to: d.email }).catch((e) =>
-      console.error("Partner confirmation email failed:", e)
-    );
-
-    // Notify admin (non-blocking)
-    sendEmail(
-      buildAdminNotificationEmail({
+    sendEmails(
+      { ...confirmEmail, to: d.email },
+      {
         type: "Partner Application",
         name: `${d.ownerName} (${d.businessName})`,
         email: d.email,
         details: `Type: ${d.partnerType}\nPhone: ${d.phone}\nRooms: ${d.totalRooms || "N/A"}\nWebsite: ${d.website || "None"}`,
-      })
-    ).catch((e) =>
-      console.error("Partner admin notification email failed:", e)
+      },
     );
 
     return { success: true };

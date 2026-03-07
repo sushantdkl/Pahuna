@@ -4,7 +4,7 @@ import { Star, MapPin, Wifi, Car, UtensilsCrossed, CheckCircle } from "lucide-re
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { formatPrice } from "@/lib/utils";
+import { cn, formatPrice } from "@/lib/utils";
 
 interface HotelCardProps {
   name: string;
@@ -19,6 +19,8 @@ interface HotelCardProps {
   isFeatured: boolean;
   amenities: string[];
   coverImage?: string;
+  /** Visual highlight ring when selected/hovered from the map */
+  isActive?: boolean;
 }
 
 const amenityIcons: Record<string, React.ReactNode> = {
@@ -40,9 +42,15 @@ export function HotelCard({
   isFeatured,
   amenities,
   coverImage,
+  isActive,
 }: HotelCardProps) {
   return (
-    <Card className="group overflow-hidden border transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5">
+    <Card
+      className={cn(
+        "group overflow-hidden border transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5",
+        isActive && "ring-2 ring-primary shadow-xl -translate-y-0.5",
+      )}
+    >
       {/* Image */}
       <div className="relative aspect-[4/3] overflow-hidden bg-muted">
         <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/10 to-transparent z-10" />

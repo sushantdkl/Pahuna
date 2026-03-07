@@ -6,8 +6,7 @@ import {
   type TrainingEnrollmentInput,
 } from "@/lib/validations";
 import {
-  sendEmail,
-  buildAdminNotificationEmail,
+  sendEmails,
   buildTrainingConfirmationEmail,
 } from "@/lib/email";
 import type { ActionResult } from "@/lib/types/actions";
@@ -35,35 +34,29 @@ export async function submitTrainingEnrollment(data: TrainingEnrollmentInput): P
       },
     });
 
-    // Confirm to user (non-blocking)
+    // Send user confirmation + admin notification (non-blocking)
     const confirmationEmail = buildTrainingConfirmationEmail({
       studentName: d.fullName,
       courseName: d.courseId.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
     });
-    await sendEmail({ ...confirmationEmail, to: d.email }).catch((e) =>
-      console.error("Confirmation email failed:", e)
-    );
-
-    // Notify admin (non-blocking)
-    const details = [
-      `Phone: ${d.phone}`,
-      `Course: ${d.courseId}`,
-      d.age ? `Age: ${d.age}` : null,
-      d.education ? `Education: ${d.education}` : null,
-      d.experience ? `Experience: ${d.experience}` : null,
-      d.motivation ? `Motivation: ${d.motivation}` : null,
-    ]
-      .filter(Boolean)
-      .join("\n");
-
-    await sendEmail(
-      buildAdminNotificationEmail({
+    sendEmails(
+      { ...confirmationEmail, to: d.email },
+      {
         type: "Training Enrollment",
         name: d.fullName,
         email: d.email,
-        details,
-      })
-    ).catch((e) => console.error("Admin notification failed:", e));
+        details: [
+          `Phone: ${d.phone}`,
+          `Course: ${d.courseId}`,
+          d.age ? `Age: ${d.age}` : null,
+          d.education ? `Education: ${d.education}` : null,
+          d.experience ? `Experience: ${d.experience}` : null,
+          d.motivation ? `Motivation: ${d.motivation}` : null,
+        ]
+          .filter(Boolean)
+          .join("\n"),
+      },
+    );
 
     return { success: true };
   } catch (error) {

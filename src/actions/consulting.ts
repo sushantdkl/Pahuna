@@ -2,7 +2,7 @@
 
 import { db } from "@/lib/db";
 import { consultingLeadSchema, type ConsultingLeadInput } from "@/lib/validations";
-import { sendEmail, buildAdminNotificationEmail, buildConsultingConfirmationEmail } from "@/lib/email";
+import { sendEmails, buildConsultingConfirmationEmail } from "@/lib/email";
 import type { ActionResult } from "@/lib/types/actions";
 
 export async function submitConsultingLead(data: ConsultingLeadInput): Promise<ActionResult> {
@@ -35,19 +35,15 @@ export async function submitConsultingLead(data: ConsultingLeadInput): Promise<A
       },
     });
 
-    // Confirm to user (non-blocking)
+    // Send user confirmation + admin notification (non-blocking)
     const confirmEmail = buildConsultingConfirmationEmail({
       contactName: d.contactName,
       businessName: d.businessName,
       serviceType: d.serviceType,
     });
-    await sendEmail({ ...confirmEmail, to: d.email }).catch((e) =>
-      console.error("Confirmation email failed:", e)
-    );
-
-    // Notify admin (non-blocking)
-    await sendEmail(
-      buildAdminNotificationEmail({
+    sendEmails(
+      { ...confirmEmail, to: d.email },
+      {
         type: "Consulting Lead",
         name: `${d.contactName} (${d.businessName})`,
         email: d.email,
@@ -62,8 +58,8 @@ export async function submitConsultingLead(data: ConsultingLeadInput): Promise<A
         ]
           .filter(Boolean)
           .join("\n"),
-      })
-    ).catch((e) => console.error("Admin notification failed:", e));
+      },
+    );
 
     return { success: true };
   } catch (error) {

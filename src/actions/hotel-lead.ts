@@ -3,9 +3,8 @@
 import { db } from "@/lib/db";
 import { hotelLeadSchema, type HotelLeadInput } from "@/lib/validations";
 import {
-  sendEmail,
+  sendEmails,
   buildHotelLeadConfirmationEmail,
-  buildAdminNotificationEmail,
 } from "@/lib/email";
 import type { ActionResult } from "@/lib/types/actions";
 
@@ -42,24 +41,20 @@ export async function submitHotelLead(data: HotelLeadInput): Promise<ActionResul
       },
     });
 
-    // Send confirmation (non-blocking)
+    // Send user confirmation + admin notification (non-blocking)
     const confirmEmail = buildHotelLeadConfirmationEmail({
       ownerName: d.ownerName,
       hotelName: d.hotelName,
     });
-    await sendEmail({ ...confirmEmail, to: d.email }).catch((e) =>
-      console.error("Confirmation email failed:", e)
-    );
-
-    // Notify admin (non-blocking)
-    await sendEmail(
-      buildAdminNotificationEmail({
+    sendEmails(
+      { ...confirmEmail, to: d.email },
+      {
         type: "Hotel Lead",
         name: `${d.ownerName} (${d.hotelName})`,
         email: d.email,
         details: `Type: ${d.propertyType}\nLocation: ${d.location}\nRooms: ${d.totalRooms || "N/A"}\nOnline: ${d.currentOnline ? "Yes" : "No"}\nPrice Range: ${d.priceRange || "N/A"}\n\nChallenges: ${d.challenges || "None"}\nGoals: ${d.goals || "None"}`,
-      })
-    ).catch((e) => console.error("Admin notification failed:", e));
+      },
+    );
 
     return { success: true };
   } catch (error) {

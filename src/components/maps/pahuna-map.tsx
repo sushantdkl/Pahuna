@@ -1,10 +1,11 @@
 "use client";
 
 import { Map } from "@vis.gl/react-google-maps";
-import { type ReactNode } from "react";
-import { MapPin } from "lucide-react";
+import { type ReactNode, Suspense } from "react";
+import { MapPin, WifiOff } from "lucide-react";
 import { SURKHET_CENTER, ZOOM, PAHUNA_MAP_STYLES } from "./map-constants";
 import { hasGoogleMapsKey } from "./google-maps-provider";
+import { MapSkeleton } from "./map-skeleton";
 
 interface PahunaMapProps {
   center?: { lat: number; lng: number };
@@ -17,37 +18,47 @@ interface PahunaMapProps {
 
 /**
  * Core branded map component for Pahuna.
- * Shows a styled Google Map or a branded fallback when API key is missing.
+ * Shows a styled Google Map, a loading skeleton while initializing,
+ * or a branded fallback when API key is missing.
  */
 export function PahunaMap({
   center = SURKHET_CENTER,
   zoom = ZOOM.city,
   children,
-  className = "w-full h-[400px] rounded-xl overflow-hidden",
+  className = "w-full h-[300px] md:h-[400px] rounded-xl overflow-hidden",
   fallbackLabel = "Surkhet, Nepal",
 }: PahunaMapProps) {
   if (!hasGoogleMapsKey()) {
     return (
       <div
-        className={`${className} bg-slate-900 flex flex-col items-center justify-center gap-3 border border-slate-700`}
+        className={`${className} bg-linear-to-br from-slate-900 to-slate-800 flex flex-col items-center justify-center gap-3 border border-slate-700/60`}
       >
-        <MapPin className="h-8 w-8 text-amber-400" />
-        <p className="text-slate-300 text-sm font-medium">{fallbackLabel}</p>
-        <p className="text-slate-500 text-xs">Map loads when API key is configured</p>
+        <div className="rounded-full bg-amber-500/10 p-3">
+          <MapPin className="h-6 w-6 text-amber-400" />
+        </div>
+        <p className="text-slate-300 text-sm font-medium text-center px-4">
+          {fallbackLabel}
+        </p>
+        <div className="flex items-center gap-1.5 text-slate-500">
+          <WifiOff className="h-3 w-3" />
+          <p className="text-xs">Map available when API key is configured</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <Map
-      defaultCenter={center}
-      defaultZoom={zoom}
-      gestureHandling="cooperative"
-      disableDefaultUI
-      className={className}
-      styles={PAHUNA_MAP_STYLES}
-    >
-      {children}
-    </Map>
+    <Suspense fallback={<MapSkeleton className={className} />}>
+      <Map
+        defaultCenter={center}
+        defaultZoom={zoom}
+        gestureHandling="cooperative"
+        disableDefaultUI
+        className={className}
+        styles={PAHUNA_MAP_STYLES}
+      >
+        {children}
+      </Map>
+    </Suspense>
   );
 }

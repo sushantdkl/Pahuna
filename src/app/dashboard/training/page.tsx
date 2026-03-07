@@ -1,23 +1,21 @@
 import { requireRole } from "@/lib/auth-helpers";
 import { db } from "@/lib/db";
 import { StatCard } from "@/components/dashboard/stat-card";
-import {
-  DataTableCard,
-  StatusBadge,
-} from "@/components/dashboard/data-table-card";
-import { GraduationCap, Users, BookOpen } from "lucide-react";
+import { GraduationCap, Users, BookOpen, CheckCircle } from "lucide-react";
 import { format } from "date-fns";
+import { TrainingContent } from "./training-content";
 
 export default async function DashboardTrainingPage() {
   await requireRole(["ADMIN", "TRAINING_MANAGER"]);
 
-  const [courseCount, enrollmentCount, pendingCount, recentEnrollments] =
+  const [courseCount, enrollmentCount, pendingCount, confirmedCount, recentEnrollments] =
     await Promise.all([
       db.trainingCourse.count(),
       db.trainingEnrollment.count(),
       db.trainingEnrollment.count({ where: { status: "PENDING" } }),
+      db.trainingEnrollment.count({ where: { status: "CONFIRMED" } }),
       db.trainingEnrollment.findMany({
-        take: 10,
+        take: 30,
         orderBy: { createdAt: "desc" },
         include: { course: { select: { title: true } } },
       }),
@@ -27,6 +25,7 @@ export default async function DashboardTrainingPage() {
     id: e.id,
     fullName: e.fullName,
     email: e.email,
+    phone: e.phone ?? "—",
     course: e.course.title,
     status: e.status,
     date: format(e.createdAt, "MMM d, yyyy"),
@@ -41,7 +40,7 @@ export default async function DashboardTrainingPage() {
         </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-4">
         <StatCard title="Courses" value={courseCount} icon={BookOpen} />
         <StatCard
           title="Enrollments"
@@ -54,25 +53,14 @@ export default async function DashboardTrainingPage() {
           subtitle="Awaiting confirmation"
           icon={Users}
         />
+        <StatCard
+          title="Confirmed"
+          value={confirmedCount}
+          icon={CheckCircle}
+        />
       </div>
 
-      <DataTableCard
-        title="Recent Enrollments"
-        description="Latest student enrollment applications"
-        data={rows}
-        emptyMessage="No enrollments yet"
-        columns={[
-          { header: "Student", accessorKey: "fullName" },
-          { header: "Email", accessorKey: "email", className: "hidden md:table-cell" },
-          { header: "Course", accessorKey: "course" },
-          {
-            header: "Status",
-            accessorKey: "status",
-            cell: (val) => <StatusBadge status={String(val)} />,
-          },
-          { header: "Date", accessorKey: "date", className: "hidden sm:table-cell" },
-        ]}
-      />
+      <TrainingContent enrollments={rows} totalCount={enrollmentCount} />
     </div>
   );
 }

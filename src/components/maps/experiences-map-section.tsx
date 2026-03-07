@@ -32,7 +32,7 @@ export function ExperiencesMapSection({ experiences }: ExperiencesMapSectionProp
       <PahunaMap
         center={SURKHET_CENTER}
         zoom={ZOOM.city}
-        className="w-full h-[350px] rounded-xl overflow-hidden"
+        className="w-full h-[280px] md:h-[350px] rounded-xl overflow-hidden"
         fallbackLabel="Experiences in Surkhet"
       >
         {mappable.map((exp) => (
@@ -40,12 +40,14 @@ export function ExperiencesMapSection({ experiences }: ExperiencesMapSectionProp
             key={exp.slug}
             position={{ lat: exp.latitude!, lng: exp.longitude! }}
             title={exp.title}
+            category="experience"
           >
             <PahunaInfoCard
               name={exp.title}
               href={`/experiences#${exp.slug}`}
               image={exp.coverImage}
               subtitle={exp.category}
+              category="experience"
             />
           </PahunaMarker>
         ))}

@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { callbackSchema, type CallbackInput } from "@/lib/validations";
 import {
   sendEmail,
+  sendEmails,
   buildCallbackConfirmationEmail,
   buildAdminNotificationEmail,
 } from "@/lib/email";
@@ -38,27 +39,33 @@ export async function submitCallbackRequest(data: CallbackInput): Promise<Action
       },
     });
 
-    // Send confirmation if email was provided (non-blocking)
+    // Send confirmation + admin notification (non-blocking)
     if (d.email) {
       const confirmEmail = buildCallbackConfirmationEmail({
         fullName: d.fullName,
         phone: d.phone,
         preferredTime: d.preferredTime,
       });
-      await sendEmail({ ...confirmEmail, to: d.email }).catch((e) =>
-        console.error("Confirmation email failed:", e)
+      sendEmails(
+        { ...confirmEmail, to: d.email },
+        {
+          type: "Callback Request",
+          name: d.fullName,
+          email: d.email,
+          details: `Phone: ${d.phone}\nPreferred Time: ${d.preferredTime || "ASAP"}\n${d.hotelName ? `Hotel: ${d.hotelName}` : ""}\n${d.message || ""}`,
+        },
+      );
+    } else {
+      // No user email — send admin notification only
+      sendEmail(
+        buildAdminNotificationEmail({
+          type: "Callback Request",
+          name: d.fullName,
+          email: "No email provided",
+          details: `Phone: ${d.phone}\nPreferred Time: ${d.preferredTime || "ASAP"}\n${d.hotelName ? `Hotel: ${d.hotelName}` : ""}\n${d.message || ""}`,
+        }),
       );
     }
-
-    // Notify admin (non-blocking)
-    await sendEmail(
-      buildAdminNotificationEmail({
-        type: "Callback Request",
-        name: d.fullName,
-        email: d.email || "No email provided",
-        details: `Phone: ${d.phone}\nPreferred Time: ${d.preferredTime || "ASAP"}\n${d.hotelName ? `Hotel: ${d.hotelName}` : ""}\n${d.message || ""}`,
-      })
-    ).catch((e) => console.error("Admin notification failed:", e));
 
     return { success: true };
   } catch (error) {

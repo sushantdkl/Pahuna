@@ -38,7 +38,7 @@ export function ItinerariesMapSection({ itineraries }: ItinerariesMapSectionProp
       <PahunaMap
         center={SURKHET_CENTER}
         zoom={ZOOM.city}
-        className="w-full h-[350px] rounded-xl overflow-hidden"
+        className="w-full h-[280px] md:h-[350px] rounded-xl overflow-hidden"
         fallbackLabel="Trip Ideas — Surkhet"
       >
         {mappable.map((itin) => (
@@ -46,12 +46,14 @@ export function ItinerariesMapSection({ itineraries }: ItinerariesMapSectionProp
             key={itin.slug}
             position={{ lat: itin.lat, lng: itin.lng }}
             title={itin.title}
+            category="itinerary"
           >
             <PahunaInfoCard
               name={itin.title}
               href={`/itineraries/${itin.slug}`}
               image={itin.coverImage}
               subtitle={itin.duration}
+              category="itinerary"
             />
           </PahunaMarker>
         ))}

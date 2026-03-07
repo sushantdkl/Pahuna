@@ -2,7 +2,7 @@
 
 import { db } from "@/lib/db";
 import { contactSchema, type ContactInput } from "@/lib/validations";
-import { sendEmail, buildAdminNotificationEmail } from "@/lib/email";
+import { sendEmails, buildContactConfirmationEmail } from "@/lib/email";
 import type { ActionResult } from "@/lib/types/actions";
 
 export async function submitContact(data: ContactInput): Promise<ActionResult> {
@@ -25,22 +25,16 @@ export async function submitContact(data: ContactInput): Promise<ActionResult> {
       },
     });
 
-    // Confirm to user (non-blocking — DB write already succeeded)
-    await sendEmail({
-      to: email,
-      subject: "Message Received — Pahuna",
-      body: `Hi ${fullName},\n\nThank you for reaching out about "${subject}". We've received your message and will respond within 24 hours.\n\nBest regards,\nPahuna Team`,
-    }).catch((e) => console.error("Confirmation email failed:", e));
-
-    // Notify admin (non-blocking)
-    await sendEmail(
-      buildAdminNotificationEmail({
+    // Send user confirmation + admin notification (non-blocking)
+    sendEmails(
+      buildContactConfirmationEmail({ fullName, email, subject: subject ?? undefined }),
+      {
         type: "Contact Message",
         name: fullName,
         email,
-        details: `Subject: ${subject}\n\n${message}`,
-      })
-    ).catch((e) => console.error("Admin notification failed:", e));
+        details: `Subject: ${subject ?? "—"}\n\n${message}`,
+      },
+    );
 
     return { success: true };
   } catch (error) {
