@@ -4,7 +4,7 @@ import { Marker, Popup } from "react-leaflet";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Marker as LeafletMarker } from "leaflet";
 import L from "leaflet";
-import { type MarkerCategory, CATEGORY_COLORS } from "./map-constants";
+import { type MarkerCategory } from "./map-constants";
 
 interface PahunaMarkerProps {
   position: { lat: number; lng: number };
@@ -49,29 +49,37 @@ export function PahunaMarker({
     else setInternalOpen(open);
   };
 
-  const colors = CATEGORY_COLORS[category];
-
   const positionArray: [number, number] = [position.lat, position.lng];
 
+  const markerColorByCategory: Record<MarkerCategory, string> = {
+    destination: "#166534", // primary green
+    lake: "#0369a1", // blue
+    temple: "#b45309", // amber
+    experience: "#7c3aed", // purple
+    hotel: "#be185d", // pink
+    restaurant: "#be185d",
+    itinerary: "#166534",
+    office: "#14532d",
+    default: "#166534",
+  };
+
+  const pinColor = markerColorByCategory[category] ?? "#166534";
+
   const iconHtml = useMemo(() => {
+    const labelHtml =
+      label != null
+        ? `<span style="position:absolute;top:-6px;right:-6px;display:flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:999px;background:#ffffff;color:#111827;font-size:10px;font-weight:700;box-shadow:0_1px_4px_rgba(0,0,0,0.3);">${label}</span>`
+        : "";
+
+    const scale = isActive ? 1.1 : 1;
+
     return `
-      <div class="flex flex-col items-center group">
-        <div class="relative rounded-full p-1.5 shadow-lg transition-all ${colors.bg} ${colors.shadow} ${
-          isActive ? "scale-125 ring-2 ring-white ring-offset-2" : "group-hover:scale-110"
-        }">
-          <span class="block h-4 w-4 ${colors.text}">
-            <!-- Lucide icon placeholder; visual style driven by color -->
-          </span>
-          ${
-            label != null
-              ? `<span class="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-white text-[10px] font-bold text-slate-900 shadow-sm ring-1 ring-slate-200">${label}</span>`
-              : ""
-          }
-        </div>
-        <div class="mt-0.5 h-2 w-0.5 ${colors.bg}"></div>
+      <div style="position:relative;display:flex;align-items:center;justify-content:center;transform:scale(${scale});transition:transform 150ms ease-out;">
+        <div style="width:32px;height:32px;background:${pinColor};border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid #ffffff;box-shadow:0 2px 8px rgba(0,0,0,0.25);"></div>
+        ${labelHtml}
       </div>
     `;
-  }, [colors.bg, colors.shadow, colors.text, isActive, label]);
+  }, [pinColor, isActive, label]);
 
   const icon = useMemo(
     () =>
@@ -80,7 +88,7 @@ export function PahunaMarker({
         className: "pahuna-marker", // avoid default Leaflet icon styles
         iconSize: [32, 32],
         iconAnchor: [16, 32],
-        popupAnchor: [0, -28],
+        popupAnchor: [0, -36],
       }),
     [iconHtml],
   );
