@@ -23,7 +23,7 @@ import { Separator } from "@/components/ui/separator";
 import { PackageCard } from "@/components/tourism/package-card";
 import { tripPackages, getPackageSlugs } from "@/services";
 import { formatPrice } from "@/lib/utils";
-import { RouteMapSection } from "@/components/maps/route-map-section";
+import { RouteMapSectionClient } from "@/components/maps/route-map-section-client";
 
 interface PackageDetailPageProps {
   params: Promise<{ slug: string }>;
@@ -244,7 +244,7 @@ export default async function PackageDetailPage({
 
           {/* Route Map */}
           <div className="mb-10">
-            <RouteMapSection days={pkg.days} />
+            <RouteMapSectionClient days={pkg.days} />
           </div>
 
           <div className="space-y-6">

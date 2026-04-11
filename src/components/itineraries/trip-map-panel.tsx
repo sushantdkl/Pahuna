@@ -51,7 +51,7 @@ export function TripMapPanel({
 
   const openDirections = (lat: number, lng: number) => {
     window.open(
-      `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`,
+      `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=15/${lat}/${lng}`,
       "_blank",
       "noopener,noreferrer",
     );

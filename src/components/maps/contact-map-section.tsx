@@ -21,10 +21,10 @@ const contactDetails = [
 
 /**
  * Contact page map — shows Pahuna office location with address details
- * and Google Maps directions. Uses the shared Pahuna map system.
+ * and OpenStreetMap directions. Uses the shared Pahuna map system.
  */
 export function ContactMapSection() {
-  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${OFFICE_POSITION.lat},${OFFICE_POSITION.lng}`;
+  const mapsUrl = `https://www.openstreetmap.org/?mlat=${OFFICE_POSITION.lat}&mlon=${OFFICE_POSITION.lng}#map=16/${OFFICE_POSITION.lat}/${OFFICE_POSITION.lng}`;
 
   return (
     <div className="grid lg:grid-cols-3 gap-6">
@@ -94,7 +94,7 @@ export function ContactMapSection() {
                 rel="noopener noreferrer"
               >
                 <Navigation className="h-4 w-4 mr-2" />
-                Open in Google Maps
+                Open in OpenStreetMap
               </a>
             </Button>
             <PahunaDirections

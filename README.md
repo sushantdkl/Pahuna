@@ -60,6 +60,10 @@ Edit `.env.local` with your values:
 | `NEXT_PUBLIC_GA_ID` | No | Google Analytics 4 Measurement ID |
 | `RESEND_API_KEY` | No | Transactional email provider (Phase 2) |
 
+### 2.1 Maps
+
+Pahuna uses **Leaflet + react-leaflet** with **OpenStreetMap (Carto light tiles)** for all interactive maps (hotels, experiences, explore, itineraries, trip cost). No API keys are required for maps.
+
 ### 3. Database Setup
 
 ```bash

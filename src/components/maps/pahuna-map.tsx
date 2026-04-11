@@ -1,25 +1,21 @@
 "use client";
 
-import { Map } from "@vis.gl/react-google-maps";
-import { type ReactNode, Suspense } from "react";
-import { MapPin, WifiOff } from "lucide-react";
-import { SURKHET_CENTER, ZOOM, PAHUNA_MAP_STYLES } from "./map-constants";
-import { hasGoogleMapsKey } from "./google-maps-provider";
-import { MapSkeleton } from "./map-skeleton";
+import { MapContainer, TileLayer } from "react-leaflet";
+import { type ReactNode } from "react";
+import { SURKHET_CENTER, ZOOM } from "./map-constants";
 
 interface PahunaMapProps {
   center?: { lat: number; lng: number };
   zoom?: number;
   children?: ReactNode;
   className?: string;
-  /** Fallback text when no API key is available */
+  /** Optional label used when showing the skeleton */
   fallbackLabel?: string;
 }
 
 /**
  * Core branded map component for Pahuna.
- * Shows a styled Google Map, a loading skeleton while initializing,
- * or a branded fallback when API key is missing.
+ * Uses Leaflet + OpenStreetMap (Carto light tiles) under the hood.
  */
 export function PahunaMap({
   center = SURKHET_CENTER,
@@ -28,37 +24,25 @@ export function PahunaMap({
   className = "w-full h-[300px] md:h-[400px] rounded-xl overflow-hidden",
   fallbackLabel = "Surkhet, Nepal",
 }: PahunaMapProps) {
-  if (!hasGoogleMapsKey()) {
-    return (
-      <div
-        className={`${className} bg-linear-to-br from-slate-900 to-slate-800 flex flex-col items-center justify-center gap-3 border border-slate-700/60`}
-      >
-        <div className="rounded-full bg-amber-500/10 p-3">
-          <MapPin className="h-6 w-6 text-amber-400" />
-        </div>
-        <p className="text-slate-300 text-sm font-medium text-center px-4">
-          {fallbackLabel}
-        </p>
-        <div className="flex items-center gap-1.5 text-slate-500">
-          <WifiOff className="h-3 w-3" />
-          <p className="text-xs">Map available when API key is configured</p>
-        </div>
-      </div>
-    );
-  }
+  const centerArray: [number, number] = [center.lat, center.lng];
+  const LeafletMapContainer: any = MapContainer;
+  const LeafletTileLayer: any = TileLayer;
 
   return (
-    <Suspense fallback={<MapSkeleton className={className} />}>
-      <Map
-        defaultCenter={center}
-        defaultZoom={zoom}
-        gestureHandling="cooperative"
-        disableDefaultUI
-        className={className}
-        styles={PAHUNA_MAP_STYLES}
+    <div className={className}>
+      <LeafletMapContainer
+        center={centerArray}
+        zoom={zoom}
+        scrollWheelZoom
+        className="w-full h-full"
+        style={{ height: "100%", width: "100%" }}
       >
+        <LeafletTileLayer
+          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/">CARTO</a>'
+        />
         {children}
-      </Map>
-    </Suspense>
+      </LeafletMapContainer>
+    </div>
   );
 }

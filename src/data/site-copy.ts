@@ -814,7 +814,7 @@ export const contactCopy = {
   map: {
     placeholder: "Map Integration",
     description:
-      "Google Maps embed will be added here with Surkhet location",
+      "Interactive map embed will be added here with Surkhet location",
   },
 } as const;
 

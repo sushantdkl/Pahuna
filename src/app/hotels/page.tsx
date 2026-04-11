@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Container } from "@/components/layout/container";
 import { PageHero } from "@/components/shared/page-hero";
 import { NewsletterForm } from "@/components/forms/newsletter-form";
-import { HotelsExplorer } from "@/components/hotels/hotels-explorer";
+import { HotelsExplorerClient } from "@/components/hotels/hotels-explorer-client";
 import { demoHotels } from "@/services";
 import { hotelsCopy } from "@/data/site-copy";
 
@@ -33,7 +33,7 @@ export default function HotelsPage() {
       {/* ── LISTING + MAP EXPLORER ── */}
       <section className="py-14">
         <Container>
-          <HotelsExplorer hotels={demoHotels} />
+          <HotelsExplorerClient hotels={demoHotels} />
         </Container>
       </section>
 

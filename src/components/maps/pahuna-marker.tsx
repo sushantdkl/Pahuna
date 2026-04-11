@@ -1,40 +1,10 @@
 "use client";
 
-import {
-  AdvancedMarker,
-  InfoWindow,
-  useAdvancedMarkerRef,
-} from "@vis.gl/react-google-maps";
-import { useState } from "react";
-import {
-  MapPin,
-  Hotel,
-  Mountain,
-  Compass,
-  Landmark,
-  Waves,
-  UtensilsCrossed,
-  Route,
-  Building2,
-} from "lucide-react";
-import {
-  type MarkerCategory,
-  CATEGORY_COLORS,
-} from "./map-constants";
-import { cn } from "@/lib/utils";
-
-/** Map category names to Lucide icon components */
-const CATEGORY_ICONS: Record<MarkerCategory, React.ElementType> = {
-  hotel: Hotel,
-  destination: Mountain,
-  experience: Compass,
-  temple: Landmark,
-  lake: Waves,
-  restaurant: UtensilsCrossed,
-  itinerary: Route,
-  office: Building2,
-  default: MapPin,
-};
+import { Marker, Popup } from "react-leaflet";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { Marker as LeafletMarker } from "leaflet";
+import L from "leaflet";
+import { type MarkerCategory, CATEGORY_COLORS } from "./map-constants";
 
 interface PahunaMarkerProps {
   position: { lat: number; lng: number };
@@ -67,7 +37,7 @@ export function PahunaMarker({
   onOpenChange,
   isActive,
 }: PahunaMarkerProps) {
-  const [markerRef, marker] = useAdvancedMarkerRef();
+  const markerRef = useRef<LeafletMarker | null>(null);
   const [internalOpen, setInternalOpen] = useState(false);
 
   // Controlled vs uncontrolled info window
@@ -80,44 +50,64 @@ export function PahunaMarker({
   };
 
   const colors = CATEGORY_COLORS[category];
-  const Icon = CATEGORY_ICONS[category];
+
+  const positionArray: [number, number] = [position.lat, position.lng];
+
+  const iconHtml = useMemo(() => {
+    return `
+      <div class="flex flex-col items-center group">
+        <div class="relative rounded-full p-1.5 shadow-lg transition-all ${colors.bg} ${colors.shadow} ${
+          isActive ? "scale-125 ring-2 ring-white ring-offset-2" : "group-hover:scale-110"
+        }">
+          <span class="block h-4 w-4 ${colors.text}">
+            <!-- Lucide icon placeholder; visual style driven by color -->
+          </span>
+          ${
+            label != null
+              ? `<span class="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-white text-[10px] font-bold text-slate-900 shadow-sm ring-1 ring-slate-200">${label}</span>`
+              : ""
+          }
+        </div>
+        <div class="mt-0.5 h-2 w-0.5 ${colors.bg}"></div>
+      </div>
+    `;
+  }, [colors.bg, colors.shadow, colors.text, isActive, label]);
+
+  const icon = useMemo(
+    () =>
+      L.divIcon({
+        html: iconHtml,
+        className: "pahuna-marker", // avoid default Leaflet icon styles
+        iconSize: [32, 32],
+        iconAnchor: [16, 32],
+        popupAnchor: [0, -28],
+      }),
+    [iconHtml],
+  );
+
+  useEffect(() => {
+    const m = markerRef.current;
+    if (!m) return;
+    if (isInfoOpen) m.openPopup();
+    else m.closePopup();
+  }, [isInfoOpen]);
 
   return (
-    <>
-      <AdvancedMarker
-        ref={markerRef}
-        position={position}
-        title={title}
-        onClick={() => setOpen(!isInfoOpen)}
-        zIndex={isActive ? 100 : undefined}
-      >
-        <div className="flex flex-col items-center group">
-          <div
-            className={cn(
-              "relative rounded-full p-1.5 shadow-lg transition-all",
-              colors.bg,
-              colors.shadow,
-              isActive
-                ? "scale-125 ring-2 ring-white ring-offset-2"
-                : "group-hover:scale-110",
-            )}
-          >
-            <Icon className={`h-4 w-4 ${colors.text}`} />
-            {label != null && (
-              <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-white text-[10px] font-bold text-slate-900 shadow-sm ring-1 ring-slate-200">
-                {label}
-              </span>
-            )}
-          </div>
-          <div className={`mt-0.5 h-2 w-0.5 ${colors.bg}`} />
-        </div>
-      </AdvancedMarker>
-
-      {isInfoOpen && children && (
-        <InfoWindow anchor={marker} onCloseClick={() => setOpen(false)}>
+    <Marker
+      ref={markerRef as unknown as React.Ref<LeafletMarker>}
+      position={positionArray}
+      icon={icon}
+      title={title}
+      eventHandlers={{
+        click: () => setOpen(!isInfoOpen),
+        popupclose: () => setOpen(false),
+      }}
+    >
+      {children && (
+        <Popup>
           {children}
-        </InfoWindow>
+        </Popup>
       )}
-    </>
+    </Marker>
   );
 }

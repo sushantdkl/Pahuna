@@ -7,7 +7,6 @@ export { MapSkeleton } from "./map-skeleton";
 export {
   SURKHET_CENTER,
   ZOOM,
-  PAHUNA_MAP_STYLES,
   CATEGORY_COLORS,
   type MarkerCategory,
 } from "./map-constants";

@@ -25,9 +25,9 @@ import { InquiryForm } from "@/components/forms/inquiry-form";
 import { CallbackForm } from "@/components/forms/callback-form";
 import { demoHotels, getHotelSlugs, demoDestinations, demoExperiences } from "@/services";
 import { formatPrice } from "@/lib/utils";
-import { HotelDetailMap } from "@/components/maps/hotel-detail-map";
 import { findNearbyPlaces } from "@/lib/geo-utils";
 import type { MarkerCategory } from "@/components/maps/map-constants";
+import { HotelDetailMapClient } from "@/components/maps/hotel-detail-map-client";
 
 interface HotelDetailPageProps {
   params: Promise<{ slug: string }>;
@@ -261,20 +261,20 @@ export default async function HotelDetailPage({
               </div>
 
               {/* Location Map + Nearby */}
-              {hotel.latitude && hotel.longitude && (
-                <div>
-                  <h2 className="text-xl font-semibold mb-4">
-                    Location{nearbyPlaces.length > 0 ? " & Nearby" : ""}
-                  </h2>
-                  <HotelDetailMap
-                    lat={hotel.latitude}
-                    lng={hotel.longitude}
-                    name={hotel.name}
-                    address={hotel.address}
-                    nearbyPlaces={nearbyPlaces}
-                  />
-                </div>
-              )}
+               {hotel.latitude && hotel.longitude && (
+                 <div>
+                   <h2 className="text-xl font-semibold mb-4">
+                     Location{nearbyPlaces.length > 0 ? " & Nearby" : ""}
+                   </h2>
+                   <HotelDetailMapClient
+                     lat={hotel.latitude}
+                     lng={hotel.longitude}
+                     name={hotel.name}
+                     address={hotel.address}
+                     nearbyPlaces={nearbyPlaces}
+                   />
+                 </div>
+               )}
 
               {/* Policies */}
               <div className="rounded-2xl bg-primary/5 p-6">

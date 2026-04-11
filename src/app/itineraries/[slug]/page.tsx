@@ -13,7 +13,7 @@ import { Container } from "@/components/layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { demoItineraries, getItinerarySlugs } from "@/services";
-import { TripMapPanel } from "@/components/itineraries/trip-map-panel";
+import { TripMapPanelClient } from "@/components/itineraries/trip-map-panel-client";
 
 interface ItineraryDetailPageProps {
   params: Promise<{ slug: string }>;
@@ -122,7 +122,7 @@ export default async function ItineraryDetailPage({
             Day-by-Day Itinerary
           </h2>
 
-          <TripMapPanel
+          <TripMapPanelClient
             days={itinerary.days}
             title={itinerary.title}
             duration={itinerary.duration}

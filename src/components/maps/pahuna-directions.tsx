@@ -10,10 +10,11 @@ interface PahunaDirectionsProps {
 }
 
 /**
- * "Get Directions" button that opens Google Maps navigation in a new tab.
+ * "Get Directions" button that opens the location in OpenStreetMap
+ * so users can start navigation from there.
  */
 export function PahunaDirections({ lat, lng, label = "Get Directions" }: PahunaDirectionsProps) {
-  const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+  const url = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=15/${lat}/${lng}`;
 
   return (
     <Button variant="outline" size="sm" asChild>

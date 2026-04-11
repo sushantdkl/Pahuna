@@ -6,7 +6,7 @@ import { Container } from "@/components/layout/container";
 import { PageHero } from "@/components/shared/page-hero";
 import { EmptyState } from "@/components/shared/empty-state";
 import { demoItineraries } from "@/services";
-import { ItinerariesExplorer } from "@/components/itineraries/itineraries-explorer";
+import { ItinerariesExplorerClient } from "@/components/itineraries/itineraries-explorer-client";
 
 export const metadata: Metadata = {
   title: "Trip Ideas & Itineraries — Surkhet",
@@ -43,7 +43,7 @@ export default function ItinerariesPage() {
       <section className="py-16">
         <Container>
           {demoItineraries.length > 0 ? (
-            <ItinerariesExplorer itineraries={demoItineraries} />
+            <ItinerariesExplorerClient itineraries={demoItineraries} />
           ) : (
             <EmptyState
               icon={<Compass className="h-14 w-14" />}

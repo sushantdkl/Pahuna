@@ -7,7 +7,7 @@ import { SectionHeader } from "@/components/shared/section-header";
 import { Button } from "@/components/ui/button";
 import { BudgetEstimator } from "@/components/tourism/budget-estimator";
 import { TransportTable } from "@/components/tourism/transport-table";
-import { TripCostMapSection } from "@/components/trip-cost/trip-cost-map-section";
+import { TripCostMapSectionClient } from "@/components/trip-cost/trip-cost-map-client";
 import { demoHotels, demoDestinations, demoExperiences } from "@/services";
 import type { MarkerCategory } from "@/components/maps/map-constants";
 
@@ -119,7 +119,7 @@ export default function TripCostPage() {
             title="Where Things Are"
             subtitle="Explore hotels, attractions, and experiences on the map — tap any place to see costs and distances"
           />
-          <TripCostMapSection
+          <TripCostMapSectionClient
             hotels={hotelPlaces}
             destinations={destPlaces}
             experiences={expPlaces}

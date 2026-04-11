@@ -8,7 +8,7 @@ import { SITE_CONFIG } from "@/lib/constants";
 import { ContactForm } from "@/components/forms/contact-form";
 import { JsonLd, localBusinessJsonLd } from "@/lib/structured-data";
 import { contactCopy } from "@/data/site-copy";
-import { ContactMapSection } from "@/components/maps/contact-map-section";
+import { ContactMapSectionClient } from "@/components/maps/contact-map-client";
 
 export const metadata: Metadata = {
   title: contactCopy.metadata.title,
@@ -104,7 +104,7 @@ export default function ContactPage() {
             title="Our Location"
             subtitle="Visit us at our office in Birendranagar, Surkhet"
           />
-          <ContactMapSection />
+          <ContactMapSectionClient />
         </Container>
       </section>
     </>

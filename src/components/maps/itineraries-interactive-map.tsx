@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
-import { useMap } from "@vis.gl/react-google-maps";
+import { Polyline } from "react-leaflet";
 import { GoogleMapsProvider } from "./google-maps-provider";
 import { PahunaMap } from "./pahuna-map";
 import { PahunaMarker } from "./pahuna-marker";
@@ -36,38 +35,32 @@ function PreviewPolylines({
   itineraries: MapItinerary[];
   selectedSlug: string | null;
 }) {
-  const map = useMap();
+  return (
+    <>
+      {itineraries.map((itin) => {
+        const waypoints = itin.days
+          .filter((d) => d.latitude && d.longitude)
+          .map((d) => ({ lat: d.latitude!, lng: d.longitude! }));
 
-  useEffect(() => {
-    if (!map) return;
-    const polylines: google.maps.Polyline[] = [];
+        if (waypoints.length < 2) return null;
 
-    for (const itin of itineraries) {
-      const waypoints = itin.days
-        .filter((d) => d.latitude && d.longitude)
-        .map((d) => ({ lat: d.latitude!, lng: d.longitude! }));
+        const positions = waypoints.map((p) => [p.lat, p.lng] as [number, number]);
+        const isSelected = itin.slug === selectedSlug;
 
-      if (waypoints.length < 2) continue;
-
-      const isSelected = itin.slug === selectedSlug;
-      polylines.push(
-        new google.maps.Polyline({
-          path: waypoints,
-          strokeColor: isSelected ? "#6366f1" : "#94a3b8",
-          strokeOpacity: isSelected ? 0.9 : 0.4,
-          strokeWeight: isSelected ? 4 : 2,
-          map,
-          zIndex: isSelected ? 10 : 1,
-        }),
-      );
-    }
-
-    return () => {
-      polylines.forEach((p) => p.setMap(null));
-    };
-  }, [map, itineraries, selectedSlug]);
-
-  return null;
+        return (
+          <Polyline
+            key={itin.slug}
+            positions={positions}
+            pathOptions={{
+              color: isSelected ? "#6366f1" : "#94a3b8",
+              opacity: isSelected ? 0.9 : 0.4,
+              weight: isSelected ? 4 : 2,
+            }}
+          />
+        );
+      })}
+    </>
+  );
 }
 
 /**

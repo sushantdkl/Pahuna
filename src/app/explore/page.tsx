@@ -24,7 +24,7 @@ import { SectionHeader } from "@/components/shared/section-header";
 import { PageHero } from "@/components/shared/page-hero";
 import { surkhetCity, demoDestinations, demoExperiences } from "@/services";
 import { exploreCopy } from "@/data/site-copy";
-import { ExploreExplorer } from "@/components/explore/explore-explorer";
+import { ExploreExplorerClient } from "@/components/explore/explore-explorer-client";
 
 export const metadata: Metadata = {
   title: exploreCopy.metadata.title,
@@ -133,7 +133,7 @@ export default function ExplorePage() {
       </section>
 
       {/* ── EXPLORE DESTINATIONS & EXPERIENCES ── */}
-      <ExploreExplorer destinations={demoDestinations} experiences={demoExperiences} />
+      <ExploreExplorerClient destinations={demoDestinations} experiences={demoExperiences} />
 
       {/* ── HOW TO GET THERE ── */}
       <section className="py-20">

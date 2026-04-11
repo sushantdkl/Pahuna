@@ -98,6 +98,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        />
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" />
+      </head>
       <body className={`${inter.variable} font-sans antialiased`}>
         <SessionProvider>
           {/* Skip to main content — accessibility */}

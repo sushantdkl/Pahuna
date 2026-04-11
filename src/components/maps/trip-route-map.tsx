@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
-import { useMap } from "@vis.gl/react-google-maps";
+import { Polyline } from "react-leaflet";
 import { GoogleMapsProvider } from "./google-maps-provider";
 import { PahunaMap } from "./pahuna-map";
 import { PahunaMarker } from "./pahuna-marker";
@@ -25,48 +24,34 @@ interface TripRouteMapProps {
   showDirections?: boolean;
 }
 
-function RoutePolyline({ path }: { path: google.maps.LatLngLiteral[] }) {
-  const map = useMap();
+function RoutePolyline({ path }: { path: { lat: number; lng: number }[] }) {
+  if (path.length < 2) return null;
 
-  useEffect(() => {
-    if (!map || path.length < 2) return;
+  const positions = path.map((p) => [p.lat, p.lng] as [number, number]);
 
-    // Dashed route line
-    const polyline = new google.maps.Polyline({
-      path,
-      strokeColor: "#6366f1",
-      strokeOpacity: 0,
-      icons: [
-        {
-          icon: {
-            path: "M 0,-1 0,1",
-            strokeOpacity: 0.7,
-            strokeWeight: 3,
-            scale: 3,
-          },
-          offset: "0",
-          repeat: "16px",
-        },
-      ],
-      map,
-    });
-
-    // Solid subtle background line
-    const bgPolyline = new google.maps.Polyline({
-      path,
-      strokeColor: "#6366f1",
-      strokeOpacity: 0.15,
-      strokeWeight: 6,
-      map,
-    });
-
-    return () => {
-      polyline.setMap(null);
-      bgPolyline.setMap(null);
-    };
-  }, [map, path]);
-
-  return null;
+  return (
+    <>
+      {/* Solid subtle background line */}
+      <Polyline
+        positions={positions}
+        pathOptions={{
+          color: "#6366f1",
+          weight: 6,
+          opacity: 0.15,
+        }}
+      />
+      {/* Dashed foreground route line */}
+      <Polyline
+        positions={positions}
+        pathOptions={{
+          color: "#6366f1",
+          weight: 3,
+          opacity: 0.9,
+          dashArray: "8 12",
+        }}
+      />
+    </>
+  );
 }
 
 /**

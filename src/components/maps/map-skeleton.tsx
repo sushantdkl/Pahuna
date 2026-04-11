@@ -9,7 +9,7 @@ interface MapSkeletonProps {
 
 /**
  * Branded loading skeleton for Pahuna Maps.
- * Shown while the Google Maps JS API is initializing.
+ * Shown while the interactive map is initializing.
  */
 export function MapSkeleton({
   className = "w-full h-[300px] md:h-[400px] rounded-xl overflow-hidden",

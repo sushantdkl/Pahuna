@@ -1,17 +1,19 @@
 "use client";
 
-import { APIProvider } from "@vis.gl/react-google-maps";
 import { type ReactNode, createContext, useContext, useMemo } from "react";
 
-const MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? "";
-
 interface MapContextValue {
-  hasApiKey: boolean;
+  /**
+   * Historically used to indicate external map API readiness.
+   * With Leaflet + OpenStreetMap we always have a ready map
+   * as long as the client can load tiles.
+   */
+  isReady: boolean;
 }
 
-const MapContext = createContext<MapContextValue>({ hasApiKey: false });
+const MapContext = createContext<MapContextValue>({ isReady: true });
 
-/** Hook to check Google Maps availability from any child component */
+/** Hook kept for compatibility; currently just exposes readiness. */
 export function useMapContext() {
   return useContext(MapContext);
 }
@@ -21,28 +23,20 @@ interface GoogleMapsProviderProps {
 }
 
 /**
- * Wraps children with the Google Maps APIProvider and a MapContext.
- * If no API key is configured, renders children without the provider
- * so map components can show their own fallback UI.
+ * Backwards-compatible wrapper around map content.
+ * For Leaflet we don't need an external provider, so this
+ * simply provides a context value and renders children.
  */
 export function GoogleMapsProvider({ children }: GoogleMapsProviderProps) {
-  const value = useMemo<MapContextValue>(
-    () => ({ hasApiKey: Boolean(MAPS_API_KEY) }),
-    [],
-  );
+  const value = useMemo<MapContextValue>(() => ({ isReady: true }), []);
 
-  if (!MAPS_API_KEY) {
-    return <MapContext.Provider value={value}>{children}</MapContext.Provider>;
-  }
-
-  return (
-    <MapContext.Provider value={value}>
-      <APIProvider apiKey={MAPS_API_KEY}>{children}</APIProvider>
-    </MapContext.Provider>
-  );
+  return <MapContext.Provider value={value}>{children}</MapContext.Provider>;
 }
 
-/** Check if a Google Maps API key is configured */
+/**
+ * Kept for compatibility; Leaflet + OpenStreetMap do not
+ * require an API key, so this always returns true.
+ */
 export function hasGoogleMapsKey(): boolean {
-  return Boolean(MAPS_API_KEY);
+  return true;
 }

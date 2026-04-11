@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
-import { useMap } from "@vis.gl/react-google-maps";
+import { Polyline } from "react-leaflet";
 import { GoogleMapsProvider } from "./google-maps-provider";
 import { PahunaMap } from "./pahuna-map";
 import { PahunaMarker } from "./pahuna-marker";
@@ -20,26 +19,21 @@ interface RouteMapSectionProps {
 }
 
 /** Inner component that draws a polyline on the map using the Maps JS API */
-function RoutePolyline({ path }: { path: google.maps.LatLngLiteral[] }) {
-  const map = useMap();
+function RoutePolyline({ path }: { path: { lat: number; lng: number }[] }) {
+  if (path.length < 2) return null;
 
-  useEffect(() => {
-    if (!map || path.length < 2) return;
+  const positions = path.map((p) => [p.lat, p.lng] as [number, number]);
 
-    const polyline = new google.maps.Polyline({
-      path,
-      strokeColor: "#f59e0b",
-      strokeOpacity: 0.8,
-      strokeWeight: 3,
-      map,
-    });
-
-    return () => {
-      polyline.setMap(null);
-    };
-  }, [map, path]);
-
-  return null;
+  return (
+    <Polyline
+      positions={positions}
+      pathOptions={{
+        color: "#f59e0b",
+        weight: 3,
+        opacity: 0.8,
+      }}
+    />
+  );
 }
 
 /**
