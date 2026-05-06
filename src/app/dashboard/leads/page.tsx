@@ -33,7 +33,7 @@ export default async function DashboardLeadsPage() {
     }),
   ]);
 
-  const inquiryRows = recentInquiries.map((i) => ({
+  const inquiryRows = recentInquiries.map((i: any) => ({
     id: i.id,
     fullName: i.fullName,
     email: i.email,
@@ -44,7 +44,7 @@ export default async function DashboardLeadsPage() {
     date: format(i.createdAt, "MMM d, yyyy"),
   }));
 
-  const leadRows = recentLeads.map((l) => ({
+  const leadRows = recentLeads.map((l: any) => ({
     id: l.id,
     contactName: l.contactName,
     businessName: l.businessName,

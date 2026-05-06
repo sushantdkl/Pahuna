@@ -59,7 +59,7 @@ export async function submitInquiry(data: InquiryInput): Promise<ActionResult<{ 
       },
     );
 
-    return { success: true, data: { inquiryId: inquiry.id } };
+    return { success: true, data: { inquiryId: String((inquiry as { id?: string; _id?: string }).id ?? (inquiry as { _id?: string })._id ?? "") } };
   } catch (error) {
     console.error("Inquiry submission error:", error);
     return { success: false, error: "Failed to submit inquiry. Please try again." };

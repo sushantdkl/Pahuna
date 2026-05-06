@@ -3,7 +3,7 @@
 import { useState, type ReactNode } from "react";
 import { DashboardSidebar } from "./dashboard-sidebar";
 import { DashboardHeader } from "./dashboard-header";
-import type { UserRole } from "@prisma/client";
+import type { UserRole } from "@/lib/user-role";
 
 interface DashboardShellProps {
   user: {

@@ -20,7 +20,7 @@ export default async function DashboardPartnersPage() {
       }),
     ]);
 
-  const rows = recentApplications.map((a) => ({
+  const rows = recentApplications.map((a: any) => ({
     id: a.id,
     businessName: a.businessName,
     ownerName: a.ownerName,

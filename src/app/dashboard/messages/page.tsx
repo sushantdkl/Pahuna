@@ -17,7 +17,7 @@ export default async function DashboardMessagesPage() {
     }),
   ]);
 
-  const rows = recentMessages.map((m) => ({
+  const rows = recentMessages.map((m: any) => ({
     id: m.id,
     fullName: m.fullName,
     email: m.email,

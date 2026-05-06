@@ -20,7 +20,7 @@ export default async function DashboardConsultingPage() {
       }),
     ]);
 
-  const rows = recentLeads.map((l) => ({
+  const rows = recentLeads.map((l: any) => ({
     id: l.id,
     contactName: l.contactName,
     businessName: l.businessName,

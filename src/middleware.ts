@@ -12,7 +12,10 @@ export async function middleware(request: NextRequest) {
 
   // Only protect /dashboard routes
   if (pathname.startsWith("/dashboard")) {
-    const token = await getToken({ req: request });
+    const token = await getToken({
+      req: request,
+      secret: process.env.NEXTAUTH_SECRET,
+    });
 
     if (!token) {
       const loginUrl = new URL("/login", request.url);
@@ -23,7 +26,10 @@ export async function middleware(request: NextRequest) {
 
   // Redirect authenticated users away from /login
   if (pathname === "/login") {
-    const token = await getToken({ req: request });
+    const token = await getToken({
+      req: request,
+      secret: process.env.NEXTAUTH_SECRET,
+    });
     if (token) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }

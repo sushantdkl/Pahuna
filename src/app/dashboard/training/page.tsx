@@ -21,7 +21,7 @@ export default async function DashboardTrainingPage() {
       }),
     ]);
 
-  const rows = recentEnrollments.map((e) => ({
+  const rows = recentEnrollments.map((e: any) => ({
     id: e.id,
     fullName: e.fullName,
     email: e.email,

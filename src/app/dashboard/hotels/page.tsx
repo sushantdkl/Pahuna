@@ -22,7 +22,7 @@ export default async function DashboardHotelsPage() {
       }),
     ]);
 
-  const rows = recentInquiries.map((i) => ({
+  const rows = recentInquiries.map((i: any) => ({
     id: i.id,
     fullName: i.fullName,
     email: i.email,

@@ -5,7 +5,7 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
-import type { UserRole } from "@prisma/client";
+import type { UserRole } from "@/lib/user-role";
 
 /** Get the current session (returns null if not authenticated) */
 export async function getCurrentSession() {

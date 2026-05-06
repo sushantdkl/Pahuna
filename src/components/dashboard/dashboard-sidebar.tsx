@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { hasPermission } from "@/lib/roles";
-import type { UserRole } from "@prisma/client";
+import type { UserRole } from "@/lib/user-role";
 import {
   LayoutDashboard,
   Hotel,

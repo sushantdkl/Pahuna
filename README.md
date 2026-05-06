@@ -174,6 +174,11 @@ DATABASE_URL=postgresql://user:pass@host/db?sslmode=require
 NEXTAUTH_SECRET=<your-32-char-secret>
 NEXTAUTH_URL=https://yourdomain.com
 NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
+
+# Optional first-deploy login recovery (recommended for fresh deployments)
+DEMO_ADMIN_EMAIL=admin@surkhethotel.com
+DEMO_ADMIN_PASSWORD=<strong-password>
+BOOTSTRAP_TOKEN=<random-secret-token>
 ```
 
 > **Database:** Use a serverless-compatible PostgreSQL provider:
@@ -188,6 +193,7 @@ NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
 - [ ] Verify `NEXTAUTH_URL` matches your production domain
 - [ ] Run `npm run db:migrate` against production DB
 - [ ] Run `npm run db:seed` to populate demo data (or skip for clean start)
+- [ ] If admin login fails, open `/api/bootstrap-admin?token=<BOOTSTRAP_TOKEN>` once to create/update admin user
 - [ ] Change default admin passwords (`password123`)
 - [ ] Test all forms: contact, inquiry, callback, partner, hotel-lead, consulting, training, newsletter
 - [ ] Test admin login at `/login` and dashboard at `/dashboard`

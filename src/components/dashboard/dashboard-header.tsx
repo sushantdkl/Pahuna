@@ -4,7 +4,7 @@ import { signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { ROLE_LABELS } from "@/lib/roles";
 import { Menu, LogOut } from "lucide-react";
-import type { UserRole } from "@prisma/client";
+import type { UserRole } from "@/lib/user-role";
 
 interface DashboardHeaderProps {
   user: {

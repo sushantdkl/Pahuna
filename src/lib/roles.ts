@@ -2,7 +2,7 @@
 // Role definitions & permission helpers
 // =============================================================================
 
-import type { UserRole } from "@prisma/client";
+import type { UserRole } from "@/lib/user-role";
 
 /** Human-readable labels per role */
 export const ROLE_LABELS: Record<UserRole, string> = {
